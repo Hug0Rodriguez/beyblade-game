@@ -117,3 +117,77 @@
   from { box-shadow: 0 0 0 3px var(--hint-color), 0 0 10px var(--hint-color); }
   to { box-shadow: 0 0 0 5px var(--hint-color), 0 0 26px var(--hint-color); }
 }
+
+/* Menu button. */
+.menu-button {
+  appearance: none;
+  border: 0;
+  pointer-events: auto;
+  touch-action: manipulation;
+  min-width: 200px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #ffffff;
+  font: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}
+.menu-button:hover,
+.menu-button:active {
+  background: var(--accent-hover);
+}
+
+/* Gauge: a bar that fills left-to-right (or right-to-left with .flip). */
+.gauge {
+  position: relative;
+  height: var(--gauge-height, 10px);
+  border-radius: 4px;
+  background: var(--gauge-back, #08060f);
+  overflow: hidden;
+}
+.gauge-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 4px;
+  background: var(--gauge-fill, #ffffff);
+  transition: width 60ms linear;
+}
+.gauge.flip .gauge-fill {
+  left: auto;
+  right: 0;
+}
+
+/* Banner: centred text that pops. */
+.banner {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  text-align: center;
+  color: #ffffff;
+  -webkit-text-stroke: calc(var(--banner-stroke, 0.12em)) var(--banner-stroke-color, #08060f);
+  paint-order: stroke fill;
+  pointer-events: none;
+}
+.banner[hidden] {
+  display: none;
+}
+.banner.pop {
+  animation: gui-pop var(--banner-pop-seconds, 0.22s) ease-out;
+}
+@keyframes gui-pop {
+  from { transform: translate(-50%, -50%) scale(var(--banner-pop-scale, 1.9)); }
+  to { transform: translate(-50%, -50%) scale(1); }
+}
+.gui-pulse {
+  animation: gui-pulse var(--pulse-seconds, 0.33s) ease-in-out infinite alternate;
+}
+@keyframes gui-pulse {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}

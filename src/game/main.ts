@@ -24,6 +24,7 @@ import { validateGameData } from './gameData/validateGameData';
 import { gameMessages } from './messages';
 import type { DomainContext, ViewContext } from './shared/domainContext';
 import { selectedDish } from './shared/dataLookups';
+import './gui/hud.css';
 import { guiTokens } from './gui/guiTokens';
 
 /** Composition root: config → data → runtime → bus → world → routes → boot messages → loop. */
@@ -64,8 +65,8 @@ async function main(): Promise<void> {
   registerHandlers(bus, domainRegistry, world, ctx, view, [...screens.handlers(), ...gui.handlers(), ...timeScale.handlers()]);
 
   attachKeyboardDevice(bus, watchedKeyCodes(data));
-  attachPointerDevice(bus, app.canvas);
-  if (engine.runtime.fullscreenOnTouch) attachFullscreenOnTouch(app.canvas);
+  attachPointerDevice(bus, parent, app.canvas);
+  if (engine.runtime.fullscreenOnTouch) attachFullscreenOnTouch(parent);
   if (new URLSearchParams(location.search).has('debug')) createTouchReadout(parent, app);
   if (dev) {
     bus.observe(createMessageLog(engine.dev.messageLogKey, engine.dev.messageLogQuiet));

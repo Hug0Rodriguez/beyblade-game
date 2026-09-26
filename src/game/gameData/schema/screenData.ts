@@ -75,9 +75,9 @@ export interface HudData {
     /** Size multiplier for a won read's callout. */
     readonly bigScale: number;
   };
-  readonly shatterPrompt: ShatterPromptLayout & { readonly landscape?: Partial<ShatterPromptLayout> };
-  /** Title / Match Result layout. `landscape` overrides the fields that differ on a wide, short screen. */
-  readonly screenLayout: ScreenLayout & { readonly landscape?: Partial<ScreenLayout> };
+  readonly shatterPrompt: ShatterPromptLayout;
+  /** Title / Match Result sizes and colours (layout itself is CSS, src/game/gui/hud.css). */
+  readonly screenLayout: ScreenLayout;
 }
 
 export interface ShatterPromptLayout {

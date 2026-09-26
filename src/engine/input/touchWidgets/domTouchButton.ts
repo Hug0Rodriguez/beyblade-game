@@ -44,11 +44,10 @@ export function createDomTouchButton(bus: MessageBus, widget: string, style: Dom
   const threshold = style.aimThresholdPx ?? 0;
 
   const press = (event: PointerEvent) => {
-    if (pointerId !== -1) return;
+    if (pointerId !== -1 || !capture(element, event.pointerId)) return;
     pointerId = event.pointerId;
     pressX = event.clientX;
     pressY = event.clientY;
-    element.setPointerCapture(event.pointerId);
     element.classList.add('pressed');
     bus.publish(TouchButtonChanged, { widget, down: 1 });
     event.preventDefault();
@@ -118,4 +117,14 @@ function setPath(node: SVGSVGElement, path: string): void {
   const shape = document.createElementNS(SVG, 'path');
   shape.setAttribute('d', path);
   node.appendChild(shape);
+}
+
+/** Pointer capture can refuse (synthetic events, a pointer already gone); the button then ignores the press. */
+function capture(element: HTMLElement, pointerId: number): boolean {
+  try {
+    element.setPointerCapture(pointerId);
+    return true;
+  } catch {
+    return false;
+  }
 }

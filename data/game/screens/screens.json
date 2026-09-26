@@ -29,7 +29,7 @@
     },
     {
       "name": "hud",
-      "space": "screen"
+      "space": "gui"
     },
     {
       "name": "touch",
@@ -37,19 +37,19 @@
     },
     {
       "name": "hints",
-      "space": "screen"
+      "space": "gui"
     },
     {
       "name": "banner",
-      "space": "screen"
+      "space": "gui"
     },
     {
       "name": "title",
-      "space": "screen"
+      "space": "gui"
     },
     {
       "name": "matchResult",
-      "space": "screen"
+      "space": "gui"
     }
   ],
   "visibleIn": {

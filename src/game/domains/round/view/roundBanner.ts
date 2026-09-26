@@ -1,16 +1,15 @@
-import { FrameRendered, ViewportResized } from '@engine/messaging/engineMessages';
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
-import { createBanner } from '@engine/ui/banner';
+import { createDomBanner } from '@engine/ui/dom/banner';
 import { CountdownBeat, RoundFinished, RoundStarted } from '../../../messages/roundMessages';
 import type { ViewContext } from '../../../shared/domainContext';
 import { fillTemplate } from '../../../shared/units';
 
-/** The drop-in countdown ("3 · 2 · 1 · RIOT!"), the Round label and the Finish callout. */
+/** The drop-in countdown ("3 · 2 · 1 · RIOT!"), the Round label and the Finish callout (HTML). */
 export function roundBannerHandlers(ctx: ViewContext): HandlerDef[] {
   const hud = ctx.data.hud.hud;
-  const banner = createBanner(hud.font, hud.banner.fontSize, hud.banner.strokeColor);
-  const label = createBanner(hud.font, hud.banner.smallFontSize, hud.banner.strokeColor);
-  ctx.screens.layer('banner').addChild(banner.view, label.view);
+  const banner = createDomBanner('banner-big');
+  const label = createDomBanner('banner-small');
+  ctx.gui.layer('banner').append(banner.element, label.element);
 
   return [
     on(RoundStarted, 'round.view.onRoundStarted', (batch) => {
@@ -25,18 +24,6 @@ export function roundBannerHandlers(ctx: ViewContext): HandlerDef[] {
     on(RoundFinished, 'round.view.onRoundFinished', (batch) => {
       const finish = ctx.data.round.finishConditions.find((row) => row.finish === batch.cols.finish[batch.count - 1]);
       if (finish) banner.show(finish.banner, finish.bannerColor, ctx.data.round.roundRules.finishHoldSeconds);
-    }),
-    on(ViewportResized, 'round.view.layout', (batch) => {
-      const width = batch.cols.width[batch.count - 1];
-      const height = batch.cols.height[batch.count - 1];
-      banner.view.position.set(width / 2, height * hud.banner.yRatio);
-      banner.view.scale.set(Math.min(1, width / (hud.banner.fontSize * 8)));
-      label.view.position.set(width / 2, height * hud.banner.smallYRatio);
-    }),
-    on(FrameRendered, 'round.view.animate', (batch) => {
-      const dt = batch.cols.frameDt[batch.count - 1];
-      banner.update(dt, hud.banner);
-      label.update(dt, hud.banner);
     }),
   ];
 }

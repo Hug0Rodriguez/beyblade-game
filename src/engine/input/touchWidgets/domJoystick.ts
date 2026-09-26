@@ -63,9 +63,8 @@ export function createDomJoystick(bus: MessageBus, widget: string, style: DomJoy
   };
 
   zone.addEventListener('pointerdown', (event) => {
-    if (pointerId !== -1) return;
+    if (pointerId !== -1 || !capture(zone, event.pointerId)) return;
     pointerId = event.pointerId;
-    zone.setPointerCapture(event.pointerId);
     const rect = zone.getBoundingClientRect();
     place(event.clientX - rect.left, event.clientY - rect.top);
     event.preventDefault();
@@ -98,4 +97,14 @@ export function createDomJoystick(bus: MessageBus, widget: string, style: DomJoy
   }).observe(zone);
 
   return { zone };
+}
+
+/** Pointer capture can refuse (synthetic events, a pointer already gone); the stick then ignores the press. */
+function capture(element: HTMLElement, pointerId: number): boolean {
+  try {
+    element.setPointerCapture(pointerId);
+    return true;
+  } catch {
+    return false;
+  }
 }

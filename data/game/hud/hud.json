@@ -70,16 +70,7 @@
     "buttonGap": 14,
     "backdropColor": "#08060f",
     "backdropAlpha": 0.72,
-    "promptPulsePerSecond": 3,
-    "landscape": {
-      "titleYRatio": 0.2,
-      "taglineYRatio": 0.34,
-      "startButtonYRatio": 0.56,
-      "promptYRatio": 0.76,
-      "controlsYRatio": 0.9,
-      "resultTitleYRatio": 0.2,
-      "resultButtonsYRatio": 0.42
-    }
+    "promptPulsePerSecond": 3
   },
   "rev": {
     "nameSize": 20,
@@ -123,9 +114,6 @@
     "fontSize": 22,
     "color": "#ff4fd8",
     "yRatio": 0.8,
-    "pulsePerSecond": 8,
-    "landscape": {
-      "yRatio": 0.9
-    }
+    "pulsePerSecond": 8
   }
 }

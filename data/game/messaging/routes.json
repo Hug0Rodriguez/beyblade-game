@@ -1,5 +1,5 @@
 {
-  "//": "message type → ordered handler ids. Key order = delivery order within a drain pass; handler order = call order.",
+  "//": "message type \u2192 ordered handler ids. Key order = delivery order within a drain pass; handler order = call order.",
   "KeyChanged": [
     "spinner.onKeyChanged"
   ],
@@ -94,7 +94,8 @@
     "rig.view.onRoundStarted",
     "brawl.view.onRoundStarted",
     "round.view.onRoundStarted",
-    "style.view.onRoundStarted"
+    "style.view.onRoundStarted",
+    "style.callouts.onRoundStarted"
   ],
   "CountdownBeat": [
     "round.view.onCountdownBeat"
@@ -130,7 +131,7 @@
     "style.observeBodies",
     "rig.view.trackBodies",
     "brawl.view.trackBodies",
-    "style.view.trackBodies",
+    "style.callouts.trackBodies",
     "dish.view.onBodiesMoved"
   ],
   "RimHit": [
@@ -155,7 +156,7 @@
     "spinner.observeGear",
     "rig.view.onGearChanged",
     "brawl.view.onGearChanged",
-    "style.view.onGearChanged"
+    "style.callouts.onGearChanged"
   ],
   "Landed": [
     "moves.onLanded",
@@ -180,13 +181,14 @@
     "moves.observeRev",
     "rig.view.onRevChanged",
     "spinner.observeRev",
-    "spinner.view.onRevChanged"
+    "spinner.view.onRevChanged",
+    "style.callouts.onRevChanged"
   ],
   "RevGained": [
-    "style.view.onRevGained"
+    "style.callouts.onRevGained"
   ],
   "RedlineChanged": [
-    "style.view.onRedlineChanged",
+    "style.callouts.onRedlineChanged",
     "rig.view.hudOnRedline"
   ],
   "ShatterReady": [
@@ -216,20 +218,11 @@
     "screens.matchResult.onMatchWon"
   ],
   "ViewportResized": [
-    "engine.screens.onViewportResized",
-    "rig.view.layoutHud",
-    "style.view.layout",
-    "match.view.layout",
-    "round.view.layout",
-    "screens.title.layout",
-    "screens.brawl.layout",
-    "screens.matchResult.layout"
+    "engine.screens.onViewportResized"
   ],
   "FrameRendered": [
     "rig.view.render",
     "brawl.view.render",
-    "style.view.animate",
-    "round.view.animate",
-    "screens.title.animate"
+    "style.callouts.animate"
   ]
 }
