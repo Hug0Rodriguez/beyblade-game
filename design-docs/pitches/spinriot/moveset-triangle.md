@@ -261,23 +261,59 @@ Hodent's signs model (GB 4851–4945): informative signs show state, inviting si
 
 | Move / event | Informative (state) | Inviting (do something) | Feedback on success | Feedback on failure |
 |---|---|---|---|---|
-| ✅ Dash | Rev-up flash and aim arrow, then a speed trail | — | STRIKE / INTERRUPT! / OUT OF THE AIR!, hit-stop | **COUNTERED** when Deflected; a recovery shimmer on a whiff |
-| ✅ Whirl | Blade ring while active; the Rig stops | — | **COUNTER!**, freeze-frame, and you shoot off with the stolen speed | The ring fades into recovery; SLING! on you if Hooked |
-| ✅ Hook | Reach arc during start-up; tether on the grab | — | **SLING!**, then WALL SPLAT on the Rim | **INTERRUPT!** on you |
-| ✅ Dive | Shadow and landing marker | The rival's stun or launch glow says "dive now" | **PUNISH!** or SLAM | **OUT OF THE AIR!** on you; COUNTERED if you Dive into a Whirl |
+| ✅ Dash | The body compresses along the aim (wind-up), then stretches into a **needle** with a thin hard trail (§8.1) | The rival's claw arm lights the DASH button | STRIKE / INTERRUPT! / OUT OF THE AIR!, hit-stop | **COUNTERED** when Deflected; a recovery shimmer on a whiff |
+| ✅ Whirl | The body widens into a **shell** with a thick rim; the Rig stops (§8.1) | The rival's needle lights the WHIRL button | **COUNTER!**, freeze-frame, and you shoot off with the stolen speed | The ring fades into recovery; SLING! on you if Hooked |
+| ✅ Hook | A thin **claw** arm reaches to the true range, then snaps shut; on a grab it wraps the victim's rim and pulls (§8.1) | The rival's shell lights the HOOK button | **SLING!**, then WALL SPLAT on the Rim | **INTERRUPT!** on you |
+| ✅ Dive | The body stretches tall as a **weight** while its shadow grows under the landing spot (§8.1) | An **open** rival (splayed blades, dark gap) lights the JUMP button | **PUNISH!** or SLAM | **OUT OF THE AIR!** on you; COUNTERED if you Dive into a Whirl |
 | ✅ Gear | 0–3 pips over the Rig, trail colour, a flame ring at Gear 3 | The Rim Line glows brighter while you ride it | Pips climb; a "GEAR 3" pop | Pips drop when a hit spends them |
-| ✅ Recovery | A shimmer on the Rig while it can't act | — | — | A red flash when you press during recovery |
+| ✅ Recovery | The Rig hangs **open**: blades splayed, a gap in the shell, a slow wobble (§8.1) | — | — | A red flash when you press during recovery |
 | ✅ Rev | Rank name, **Rank pips** (spendable), bar to the next Rank, ×multiplier | Rank-up shout; a cyan ring and **REV CANCEL · J+L** while recovering or stunned with a Rank to spend (touch: the chord button reads REV) | +Rev callouts; **REV CANCEL** / **REV BREAK** in the spend colour | **−REV**, **STALE**; a red flash when a single button is pressed during recovery |
 | ✅ Shatter charge | A pink arc filling around the Rig at ZENITH; it pulses once charged | The SHATTER prompt (keyboard) or button (touch) | SHATTER slow-mo | A 2-Rank drop on a whiff |
 | ✅ Redline | Red Spin bar labelled REDLINE | — | **REDLINE** callout on entering it | — |
 | ✅ Shatter gate | A marker at 65% on the rival's Spin bar | The pulsing SHATTER prompt and button | SHATTER | A 2-Rank drop on a whiff |
 
-### 8.1 Visual language: one shape per move, everywhere (2026-09-25)
+### 8.1 The forms: the Rig's shape says what it beats (2026-09-26)
 
-Playtest note: the attacks did not telegraph what beats what; the player spammed and could not remember the triangle. The book's answer is form that follows function (GB 5171–5208), colour *and* symbol together (GB 5608–5619), recognition instead of recall (GB 4744–4752, 2110–2120), and an inviting sign that removes tutorial text (GB 4889–4899, 4939–4943). Every move now owns one silhouette and one colour, defined once in `data/game/moves/moveGlyphs.json` and drawn in four places: on the Rig in the dish (Pixi, `rigViews.ts`), on the touch button, in the HUD triangle, and beside the outcome callout.
+Playtest verdict (2026-09-25): the attacks did not telegraph what beats what, and the first fix pasted icons over unchanged tells, which is decoration. This is the redesign. **Every attack is a form the Rig's own body takes**, chosen so that physics the player already knows carries the triangle, and every choice below states its *why* with the line in *The Gamer's Brain* (GB) it rests on: form must convey function (GB 5169-5172), players should "anticipate their behavior based on their form" (GB 5185-5187), and "what is intuitive doesn't need to be learned" (GB 7478).
 
-| Move | Shape (why) | Colour | In the dish | On the button / HUD | Inviting sign |
-|---|---|---|---|---|---|
+The whole triangle in one sentence: **a NEEDLE pierces a thin ARM, an ARM wraps a wide SHELL's rim, a SHELL stops a NEEDLE, and a falling WEIGHT crushes whatever lies OPEN.** Each form's weakness is visible in its own shape.
+
+The forms live in `data/game/rig/rigForms.json` (a few numbers per form, eased per frame, so every transition animates: motion on a still Rig is what the eye catches, GB 2481; a static swap would go unnoticed, GB 1627-1629). They are drawn by `src/game/domains/rig/view/rigForm.ts`. Nothing from the old tells survives except what is listed as kept.
+
+| Form | What the Rig becomes | Why this shape (GB) | What it beats, and why that is visible | What beats it, and why that is visible |
+|---|---|---|---|---|
+| ✅ **DASH = NEEDLE** (strike) | Wind-up: the body *compresses* along the aim and folds its blades. Strike: it *stretches* into a teardrop along its path, tip sharp and bright, blades gone, trail a thin hard line. | Pointed shapes read as dangerous by default (GB 6556-6557). Compression lets the player "anticipate the transformation or movement" (GB 1467-1468). | **HOOK**: a point *pierces* the thin reaching arm (INTERRUPT!). A needle also has *nothing to grab*, which is why a Hook cannot catch it. | **WHIRL**: a point breaks on a wall (COUNTER!). |
+| ✅ **WHIRL = SHELL** (guard) | The body *widens and flattens* into a solid disc with a **thick opaque rim**, blades merge into that rim, the Rig sits still and low. Filled, never a hollow line. | A shield-bearer reads as harder to defeat (GB 5180-5181); the Koopa shell says "don't jump on it" (GB 2058-2059). Round = defensive vs angular = attack (GB 6556-6558). | **DASH**: the wall stops the point. | **HOOK**: a wide rim is a *handle*, and "the handle affords grabbing" (GB 5176). The same shape that says "strikes bounce" says "this can be hooked". |
+| ✅ **HOOK = CLAW** (grab) | Reach: a thin curved *arm* extends along the aim to the true reach (1.9 r). Grab: the arm *snaps shut* into a hook. On a grab the claw stays wrapped around the victim's rim and a taut line pulls. | Reaching then closing is the universal grasp; a handle "affords grasping and pulling" (GB 1440). The closing arc reads as one gesture by symmetry and closure (GB 1327, 1309-1310). The arm is drawn to the real reach: no false affordance (GB 7521, 5248). | **WHIRL**: the claw wraps the rim and yanks (SLING!). | **DASH**: a thin extended arm is the classic exposed weak point (GB 6545-6547); the needle cuts it. |
+| ✅ **DIVE = WEIGHT** (slam) | After the hop the body *stretches tall and narrow* and darkens while its **shadow grows into a large dark disc** under the impact point; on landing it *slams flat* with one ground ring. | A growing shadow under a target is how everyone reads "something heavy is falling" (prior knowledge shapes perception, GB 1013-1017). The weight must not share a silhouette with the needle (GB 5265, 5285): vertical and heavy vs horizontal and thin. | **OPEN** Rigs: a weight crushes what lies open (PUNISH!). | **WHIRL**: a weight bounces off a closed shell (COUNTER!); a grounded needle knocks the hopping Rig **out of the air**. |
+| ✅ **OPEN** (stunned, launched, recovering) | Blades *splay apart* leaving gaps, a dark gap opens in the shell, the disc tilts and wobbles, colour dims. Stunned wobbles slow and large. | The punish window must be an *inviting* sign, salient and unlike any attack (GB 4892-4893, 4898). An opened shell says "crushable" in the same language the shell says "hard", so the rule transfers without words (GB 5267-5268). It explains the rule rather than asserting it (GB 5441-5442). | — | **DIVE**. |
+| ✅ **SHATTER** | The needle, white-hot and twice as long, with the charge arc kept (a resource sign). | Same family, obviously bigger: large magnitudes need large differences (GB 1493). | Everything. | — |
+
+**Colour** is redundant to form, never the carrier (GB 1054-1055 colour blindness; GB 5608-5619). The body keeps the Rig's colour; only the needle tip, shell rim, claw and weight shadow-ring take the move's colour (cyan, orange, violet, lime), which is what links the touch buttons and the HUD triangle (they show the same four silhouettes) to the dish. Red is reserved for Redline and refused presses (GB 5066-5067).
+
+**Removed as noise** (GB 4757 "every extra unit of information acts like noise", GB 2473): the flashing arrow and ring, the hollow whirl ring, the reach arc, the crosshair marker, the orbiting stars, the lime pulse, the move-start particle bursts, the yellow spark fan, and every glyph overlay in the dish. **Kept**: the refused-press ring, the REV CANCEL ring and label, the Shatter charge arc, Gear pips and flame, landing dust, rim sparks.
+
+#### The clash shows why
+
+Each matchup gets its own effect on the frame of contact (Tekken: an orange hit vs a white parry halo, GB 4907-4912; tell players *why*, GB 4918; prioritise, don't stack, GB 5075-5076). Defined in `data/game/brawl/outcomeFx.json`.
+
+| Hit | What the player sees | Why it teaches the rule |
+|---|---|---|
+| **COUNTER!** (shell → needle) | The needle **snaps**: its tip shatters into shards flying back, the body collapses to round; the shell's rim flashes white once. | A point breaking on a wall; the white flash is the book's parry cue. |
+| **INTERRUPT!** (needle → claw) | The claw **arm snaps** at the contact point into pieces; the hooker is launched already OPEN. | The reached-out limb is cut: "don't reach into a dash". |
+| **SLING!** (claw → shell) | The claw is drawn **wrapped around the victim's rim**, then the line pulls taut and the victim is *stretched along the pull*. | The rim was the handle. |
+| **SPIKE!** | Same wrap, then the yank goes down into a ground ring. | Same grab language in the air (GB 1341). |
+| **PUNISH!** (weight → open) | The open shell is **crushed flat**, blades scatter, a heavy ground ring. | Crushing what lay open; the open form was the invitation. |
+| **SLAM** (weight → closed) | Flat squash, small ring, no fragments. | Heavy but not decisive. |
+| **STRIKE** family (needle → plain) | The needle keeps its form a beat past contact while the victim squashes **along the hit direction** with one tight burst. | Directional squash makes the cause visible. |
+| **CLASH** (needle ↔ needle) | Both tips spark, both snap round together. | Symmetry = no winner (GB 1327). |
+| Hook ↔ Hook | Both arms retract; nothing to grab on a grab. | — |
+| **WALL SPLAT** | Flattened against the rim, ring on the wall. | Existing rule, now directional. |
+| bump | Nothing beyond the physics. | Not every contact deserves a sign (GB 5070-5083). |
+
+Test method (GB 5213-5219, the icon survey): `?gallery=1` freezes one Rig per form on the title screen with no labels; a form that cannot be named from its silhouette gets redrawn, and a form that is named right but read as beating the wrong thing gets a new metaphor (GB 5235-5238), never a tweak.
+
+---|---|---|---|---|---|
 | ✅ DASH (strike) | **Spearhead arrow**: "thrust that way" | cyan `#36d6ff` | The arrow sits in front of the Rig along the aim during rev-up **and** the dash; it turns with a drag-aim | Arrow glyph over the word | When the rival's spearhead shows, the **WHIRL** button lights in cyan with a small spearhead in its corner |
 | ✅ WHIRL (guard) | **Shield**: "I'm braced, hit me and bounce" | orange `#ff9d3c` | The reach ring plus a shield over the Rig while braced | Shield glyph | The rival's shield lights **HOOK** |
 | ✅ HOOK (grab) | **Hook / claw**: "I pull you" | violet `#b28cff` | The claw in front of the Rig on the reach arc; it turns with a drag-aim | Hook glyph | The rival's hook lights **DASH** |

@@ -235,7 +235,8 @@
   "FrameRendered": [
     "rig.view.render",
     "brawl.view.render",
-    "style.callouts.animate"
+    "style.callouts.animate",
+    "dev.formGallery.render"
   ],
   "TouchAimChanged": [
     "spinner.onTouchAimChanged"

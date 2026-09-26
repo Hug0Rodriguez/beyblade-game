@@ -2,6 +2,7 @@ import { createDataValidator } from '@engine/data/validators';
 import { findConditionErrors } from '@engine/state/conditionTable/evaluateConditionTable';
 import { findFsmErrors } from '@engine/state/fsm/fsmDefinition';
 import { hitColumns } from '../domains/brawl';
+import { outcomeEffectNames } from '../domains/rig';
 import { moveColumns } from '../domains/moves';
 import { finishColumns } from '../domains/round';
 import { cpuSenseColumns, steerModes } from '../domains/spinner';
@@ -99,6 +100,21 @@ export function validateGameData(data: GameData): void {
   for (const cue of ['countdownBeat', 'countdownGo', 'pointsAwarded', 'rankUp', 'shatterReady', 'refused', 'roundFinished'] as const) {
     v.requireRef(`audio/sounds.cues.${cue}`, sounds.cues[cue], recipeNames);
   }
+
+  // Rig forms: every state names a moveFlow state and a form; outcome effects name real hits and known effects.
+  const forms = rig.rigForms;
+  for (const [state, form] of Object.entries(forms.states)) {
+    v.requireRef('rig/rigForms.states (state)', state, moves.moveFlow.states);
+    v.requireRef(`rig/rigForms.states.${state}`, form, Object.keys(forms.forms));
+  }
+  if (!forms.forms.default) v.error('rig/rigForms.forms: needs a "default" form');
+  for (const [hit, effect] of Object.entries(brawl.outcomeFx.effects)) {
+    if (hit !== 'default') v.requireRef('brawl/outcomeFx.effects (hit)', hit, Object.keys(brawl.hits));
+    v.requireRef(`brawl/outcomeFx.effects.${hit}.attacker`, effect.attacker, outcomeEffectNames);
+    v.requireRef(`brawl/outcomeFx.effects.${hit}.defender`, effect.defender, outcomeEffectNames);
+    v.requireOneOf(`brawl/outcomeFx.effects.${hit}.fragmentsAlong`, effect.fragmentsAlong, ['n', 'back', 'around']);
+  }
+  if (!brawl.outcomeFx.effects.default) v.error('brawl/outcomeFx.effects: needs a "default" row');
 
   // Hits: every outcome names a hits.json row; hit events are moveFlow events.
   const hitNames = Object.keys(brawl.hits);

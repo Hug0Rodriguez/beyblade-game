@@ -1,4 +1,4 @@
-import { Container, Graphics, GraphicsPath, Matrix, Text, type TextStyleFontWeight } from 'pixi.js';
+import { Container, Graphics, Text, type TextStyleFontWeight } from 'pixi.js';
 import { FrameRendered, StateEntered } from '@engine/messaging/engineMessages';
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
 import { createParticleEmitter } from '@engine/render/particles/particleEmitter';
@@ -11,19 +11,27 @@ import { SpinnerCommandIssued } from '../../../messages/spinnerMessages';
 import { RevChanged, ShatterCharging } from '../../../messages/styleMessages';
 import type { ViewContext } from '../../../shared/domainContext';
 import { rigOfSpinner } from '../../../shared/ids';
-import { drawRig } from './drawRig';
+import { copyForm, drawRigBlades, drawRigShadow, drawRigShape, easeForm, resolveForm, type MutableForm, type RigLook } from './rigForm';
 
 interface RigView {
   readonly root: Container;
-  readonly shadow: Graphics;
-  readonly body: Container;
+  /** Squashes along `squashAngle` (a hit flattens along its direction; a pull stretches). */
+  readonly squashNode: Container;
+  /** Counter-rotates the squash, carries the tilt wobble and the tall/wide silhouette. */
+  readonly formNode: Container;
+  readonly shape: Graphics;
+  readonly blades: Graphics;
   readonly flash: Graphics;
-  readonly ring: Graphics;
-  /** Tells drawn around the Rig: rev-up arrow, Hook reach arc, recovery pulse, stun stars, refused flash. */
+  readonly shadow: Graphics;
+  /** Signs that are not the body: refused press, Rev Cancel, Shatter charge, Gear pips. */
   readonly tell: Graphics;
-  /** Dive landing marker, on the ground under the Rig. */
-  readonly marker: Graphics;
+  readonly look: RigLook;
   readonly radius: number;
+  /** The body's current form, eased toward the move's form every frame. */
+  readonly form: MutableForm;
+  formName: string;
+  /** Holds the current form target for a beat after a hit (the needle pierces through). */
+  holdFormTime: number;
   move: string;
   moveAge: number;
   aimX: number;
@@ -31,13 +39,10 @@ interface RigView {
   vx: number;
   vy: number;
   refusedTime: number;
-  /** Current Gear (0–3): pips over the Rig, a flame ring at the top Gear. */
   gear: number;
   readonly color: string;
-  /** Rev Rank (what a Rev Cancel can spend) and the "REV CANCEL" prompt shown while one is available. */
   rank: number;
   readonly revLabel: Text;
-  /** Shatter charge 0..1 at ZENITH (the rival's warning). */
   charge: number;
   readonly colors: readonly string[];
   prevX: number;
@@ -49,7 +54,12 @@ interface RigView {
   angle: number;
   spinRatio: number;
   squash: number;
+  squashAngle: number;
   flashTime: number;
+  /** The shell's white parry flash. */
+  rimFlashTime: number;
+  /** While > 0 the claw is drawn wrapped around its victim (tethers), not on the body. */
+  wrapTime: number;
   wobbleTime: number;
   gone: boolean;
   toppled: boolean;
@@ -61,9 +71,17 @@ interface Tether {
   time: number;
 }
 
+interface GroundRing {
+  x: number;
+  y: number;
+  age: number;
+  radius: number;
+}
+
 /**
- * The Rigs: interpolated position, height (lift, scale, shadow), spin, squash, hit flash, Finish
- * effects, and the **tells** (brawlFx.tells) that let a player read a move before it lands.
+ * The Rigs: interpolated position, height (lift, scale, shadow), spin, and the **form** the body
+ * takes for its move (rigForms.json): a needle to strike, a shell to guard, a claw to grab, a
+ * weight to slam, open when vulnerable. Hits play out on the forms (outcomeFx.json).
  */
 export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
   const shadows = ctx.screens.layer('shadows');
@@ -72,55 +90,26 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
   ctx.screens.layer('fx').addChild(emitter.view);
   const random = ctx.random('rig.view');
   const views = new Map<number, RigView>();
+  const debug = { hits: [] as string[] };
+  if (import.meta.env.DEV) Object.assign(window as unknown as Record<string, unknown>, { __rigViews: views, __rigDebug: debug });
   const fx = () => ctx.data.brawl.brawlFx;
-  const tethers = new Graphics();
-  ctx.screens.layer('fx').addChild(tethers);
+  const forms = () => ctx.data.rig.rigForms;
+  const outcomes = () => ctx.data.brawl.outcomeFx;
+  const overlay = new Graphics();
+  ctx.screens.layer('fx').addChild(overlay);
   const activeTethers: Tether[] = [];
+  const rings: GroundRing[] = [];
   let clock = 0;
 
   const screenY = (y: number, z: number) => y - z * fx().height.liftPerUnit;
+  const formNameOf = (move: string) => forms().states[move] ?? 'default';
+  const accentOf = (view: RigView) => forms().forms[view.formName]?.accent ?? view.color;
 
-  /** Move glyphs (moveGlyphs.json): parsed once; drawn scaled to the Rig, turned along the aim. */
-  const glyphPaths = new Map<string, GraphicsPath>();
-  const glyphOf = (move: string) => Object.values(ctx.data.moves.moveGlyphs.glyphs).find((glyph) => glyph.moves.includes(move));
-  const drawGlyph = (g: Graphics, path: string, color: string, radius: number, x: number, y: number, rotation: number) => {
-    const look = ctx.data.moves.moveGlyphs.dishTells;
-    let parsed = glyphPaths.get(path);
-    if (!parsed) glyphPaths.set(path, (parsed = new GraphicsPath(path)));
-    const size = radius * look.glyphSizeRatio;
-    const matrix = new Matrix().translate(-12, -12).scale(size / 24, size / 24).rotate(rotation).translate(x, y);
-    g.path(parsed.transform(matrix)).stroke({ color, width: look.glyphWidth, alpha: look.glyphAlpha, join: 'round', cap: 'round' });
-  };
-
-  /** Draws this frame's tells for one Rig (local to its root, so they lift with it). */
+  /** Signs around the body that are not the form itself. */
   const drawTells = (view: RigView) => {
     const tells = fx().tells;
     const g = view.tell;
     g.clear();
-    const aim = Math.atan2(view.aimY, view.aimX);
-    // The move's silhouette: strikes and grabs point along the aim in front of the Rig; the guard's shield sits over it.
-    const glyph = view.gone ? undefined : glyphOf(view.move);
-    if (glyph && glyph.role !== 'none' && glyph.role !== 'slam') {
-      const distance = view.radius * ctx.data.moves.moveGlyphs.dishTells.glyphDistanceRatio;
-      if (glyph.role === 'guard') drawGlyph(g, glyph.path, glyph.color, view.radius, 0, -distance, 0);
-      else drawGlyph(g, glyph.path, glyph.color, view.radius, Math.cos(aim) * distance, Math.sin(aim) * distance, aim + Math.PI / 2);
-    }
-    if (tells.revUp.moves.includes(view.move)) {
-      const on = Math.sin(clock * tells.revUp.flashPerSecond) > 0 ? 1 : 0.45;
-      const tip = view.radius * tells.revUp.arrowLength;
-      g.moveTo(Math.cos(aim) * view.radius, Math.sin(aim) * view.radius).lineTo(Math.cos(aim) * tip, Math.sin(aim) * tip);
-      g.stroke({ color: tells.revUp.color, width: tells.revUp.width, alpha: tells.revUp.alpha * on });
-      g.circle(0, 0, view.radius * 1.12).stroke({ color: tells.revUp.color, width: 2, alpha: tells.revUp.alpha * on });
-    }
-    if (tells.reach.moves.includes(view.move)) {
-      const spec = ctx.data.moves.moveTuning.moves[view.move]?.reachRatio ? ctx.data.moves.moveTuning.moves[view.move] : ctx.data.moves.moveTuning.moves.hook;
-      const reach = view.radius * (spec?.reachRatio ?? 1.8);
-      const half = (spec?.reachArcRadians ?? TAU) / 2;
-      g.arc(0, 0, reach, aim - half, aim + half).stroke({ color: tells.reach.color, width: tells.reach.width, alpha: tells.reach.alpha });
-      g.moveTo(Math.cos(aim - half) * view.radius, Math.sin(aim - half) * view.radius).lineTo(Math.cos(aim - half) * reach, Math.sin(aim - half) * reach);
-      g.moveTo(Math.cos(aim + half) * view.radius, Math.sin(aim + half) * view.radius).lineTo(Math.cos(aim + half) * reach, Math.sin(aim + half) * reach);
-      g.stroke({ color: tells.reach.color, width: 1, alpha: tells.reach.alpha * 0.6 });
-    }
     if (view.charge > 0 && !view.gone) {
       const look = tells.shatterCharge;
       const pulse = view.charge >= 1 ? 0.6 + 0.4 * Math.abs(Math.sin(clock * look.readyPulsePerSecond)) : 1;
@@ -132,20 +121,13 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
     if (canCancel) {
       const pulse = 0.5 + 0.5 * Math.sin(clock * tells.recover.pulsePerSecond);
       g.circle(0, 0, view.radius * 1.3).stroke({ color: tells.revCancel.color, width: 3, alpha: tells.revCancel.alpha + 0.4 * pulse });
-    } else if (tells.recover.moves.includes(view.move)) {
-      const pulse = 0.5 + 0.5 * Math.sin(clock * tells.recover.pulsePerSecond);
-      g.circle(0, 0, view.radius * 1.08).fill({ color: tells.recover.color, alpha: tells.recover.alpha * pulse });
-    }
-    if (tells.stunned.moves.includes(view.move)) {
-      const orbit = clock * tells.stunned.orbitPerSecond;
-      for (let i = 0; i < tells.stunned.starCount; i++) {
-        const angle = orbit + (i * TAU) / tells.stunned.starCount;
-        g.star(Math.cos(angle) * view.radius * 0.9, -view.radius * 1.1 + Math.sin(angle) * view.radius * 0.35, 5, view.radius * 0.28, view.radius * 0.12);
-      }
-      g.fill({ color: tells.stunned.color, alpha: tells.stunned.alpha });
     }
     if (view.refusedTime > 0) {
       g.circle(0, 0, view.radius * 1.15).stroke({ color: tells.refused.color, width: 4, alpha: view.refusedTime / tells.refused.seconds });
+    }
+    if (view.rimFlashTime > 0) {
+      const r = view.radius * view.form.discScale;
+      g.circle(0, 0, r).stroke({ color: '#ffffff', width: view.radius * view.form.rimWidth + 2, alpha: view.rimFlashTime / outcomes().rimFlashSeconds });
     }
     const gearLook = ctx.data.brawl.gears.look;
     const gears = ctx.data.brawl.gears.gears;
@@ -159,13 +141,13 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
       const flicker = 0.6 + 0.4 * Math.abs(Math.sin(clock * gearLook.flameFlickerPerSecond));
       g.circle(0, 0, view.radius * 1.22).stroke({ color: gearColor, width: gearLook.flameWidth, alpha: gearLook.flameAlpha * flicker });
     }
-    const marker = tells.landingMarker;
-    view.marker.visible = marker.moves.includes(view.move) && !view.gone;
   };
 
-  const drawTethers = (dt: number) => {
+  /** World-space overlays: the claw wrapped around its victim with the pull line, and ground rings. */
+  const drawOverlay = (dt: number) => {
     const tether = fx().tells.tether;
-    tethers.clear();
+    const outcome = outcomes();
+    overlay.clear();
     for (let i = activeTethers.length - 1; i >= 0; i--) {
       const link = activeTethers[i];
       link.time -= dt;
@@ -175,11 +157,43 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
         activeTethers.splice(i, 1);
         continue;
       }
-      tethers
-        .moveTo(from.x, screenY(from.y, from.z))
-        .lineTo(to.x, screenY(to.y, to.z))
-        .stroke({ color: tether.color, width: tether.width, alpha: link.time / tether.seconds });
+      const alpha = Math.min(1, link.time / tether.seconds + 0.3);
+      const fx0 = from.x;
+      const fy0 = screenY(from.y, from.z);
+      const tx = to.x;
+      const ty = screenY(to.y, to.z);
+      const width = from.radius * forms().look.armWidthRatio;
+      const grip = to.radius * outcome.wrapRadiusRatio;
+      const toward = Math.atan2(fy0 - ty, fx0 - tx);
+      const half = outcome.wrapArcRadians / 2;
+      // The line from the grabber to the near side of the rim, then the claw around the far side.
+      overlay.moveTo(fx0, fy0).lineTo(tx + Math.cos(toward) * grip, ty + Math.sin(toward) * grip).stroke({ color: accentOf(from), width, alpha, cap: 'round' });
+      overlay.arc(tx, ty, grip, toward + Math.PI - half, toward + Math.PI + half).stroke({ color: accentOf(from), width, alpha, cap: 'round' });
     }
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const ring = rings[i];
+      ring.age += dt;
+      const t = ring.age / outcome.ring.seconds;
+      if (t >= 1) {
+        rings.splice(i, 1);
+        continue;
+      }
+      overlay.circle(ring.x, ring.y, ring.radius * (0.3 + 0.7 * t)).stroke({ color: outcome.ring.color, width: outcome.ring.width, alpha: outcome.ring.alpha * (1 - t) });
+    }
+  };
+
+  const fragments = (x: number, y: number, count: number, color: string, angle: number, spread: number, radius: number) => {
+    const spec = outcomes().fragment;
+    if (count <= 0) return;
+    emitter.emit(x, y, { count, speedMin: spec.speedMin, speedMax: spec.speedMax, life: spec.life, size: radius * spec.sizeRatio, drag: spec.drag, color, angle, spread }, random.next);
+  };
+
+  const snapToRound = (view: RigView) => {
+    const round = forms().round;
+    view.form.along = round.along;
+    view.form.across = round.across;
+    view.form.tip = round.tip;
+    view.holdFormTime = 0;
   };
 
   /** Finish effects by name — finishConditions.json picks one per Finish. */
@@ -194,7 +208,7 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
     shatter: (view) => {
       view.gone = true;
       for (const color of view.colors) {
-        emitter.emit(view.x, view.y - view.z, { count: 18, speedMin: 120, speedMax: 520, life: 0.8, size: 6, drag: 1.8, color, angle: 0, spread: TAU }, random.next);
+        emitter.emit(view.x, screenY(view.y, view.z), { count: 18, speedMin: 120, speedMax: 520, life: 0.8, size: 6, drag: 1.8, color, angle: 0, spread: TAU }, random.next);
       }
     },
   };
@@ -203,40 +217,122 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
     clock += dt;
     const height = fx().height;
     const squashTuning = fx().squash;
+    const look = forms().look;
     for (const view of views.values()) {
       const x = lerp(view.prevX, view.x, alpha);
       const y = lerp(view.prevY, view.y, alpha);
       const z = Math.max(0, lerp(view.prevZ, view.z, alpha));
-      const boost = fx().whirlRing.moves.includes(view.move) ? fx().whirlRing.spinBoost : 1;
-      view.angle += ctx.data.brawl.motion.spinDirection * (4 + 30 * view.spinRatio) * boost * dt;
-      view.wobbleTime += dt;
-      view.squash = Math.max(0, view.squash - squashTuning.recoverPerSecond * view.squash * dt);
-      view.flashTime = Math.max(0, view.flashTime - dt);
 
-      const wobble = view.toppled ? 0 : (1 - view.spinRatio) * view.radius * 0.18;
-      view.root.visible = !view.gone;
-      view.shadow.visible = !view.gone;
-      view.shadow.position.set(x + height.shadowOffset, y + height.shadowOffset);
-      view.shadow.scale.set(Math.max(0.3, 1 - z * height.shadowShrinkPerUnit));
-      view.shadow.alpha = height.shadowAlpha * Math.max(0.25, 1 - z * height.shadowShrinkPerUnit);
-      view.root.position.set(x + Math.cos(view.wobbleTime * 11) * wobble, y - z * height.liftPerUnit + Math.sin(view.wobbleTime * 11) * wobble);
-      const lift = 1 + z * height.scalePerUnit;
-      view.root.scale.set(lift * (1 + view.squash), lift * (1 - view.squash * 0.6));
-      view.body.rotation = view.toppled ? view.body.rotation : view.angle;
-      view.body.alpha = view.toppled ? 0.55 : 1;
-      view.flash.alpha = view.flashTime > 0 ? view.flashTime / fx().flashSeconds : 0;
-      view.ring.visible = fx().whirlRing.moves.includes(view.move);
+      // Ease the body toward its move's form (held still for a beat after a piercing hit).
+      view.holdFormTime = Math.max(0, view.holdFormTime - dt);
+      if (view.holdFormTime <= 0) view.formName = formNameOf(view.move);
+      const spec = forms().forms[view.formName] ?? forms().forms.default;
+      easeForm(view.form, resolveForm(forms(), view.formName), 1 - Math.exp(-dt / Math.max(0.001, spec.easeSeconds)));
+      const form = view.form;
+
+      view.angle += ctx.data.brawl.motion.spinDirection * (4 + 30 * view.spinRatio) * form.spinBoost * dt;
+      view.wobbleTime += dt;
+      view.squash -= squashTuning.recoverPerSecond * view.squash * dt;
+      if (Math.abs(view.squash) < 0.002) view.squash = 0;
+      view.flashTime = Math.max(0, view.flashTime - dt);
+      view.rimFlashTime = Math.max(0, view.rimFlashTime - dt);
+      view.wrapTime = Math.max(0, view.wrapTime - dt);
       view.moveAge += dt;
       view.refusedTime = Math.max(0, view.refusedTime - dt);
-      view.marker.position.set(x, y);
+
+      const spinWobble = view.toppled ? 0 : (1 - view.spinRatio) * view.radius * 0.18;
+      view.root.visible = !view.gone;
+      view.shadow.visible = !view.gone;
+      // The shadow: shrinks with height, unless the form is a falling weight, whose shadow grows as it comes down.
+      const falling = form.shadowScale > 1.05;
+      const shadowShrink = Math.max(0.3, 1 - z * height.shadowShrinkPerUnit);
+      view.shadow.position.set(x + height.shadowOffset, y + height.shadowOffset);
+      view.shadow.scale.set(falling ? Math.max(0.5, 1 - z * look.shadowGrowPerUnit) : shadowShrink);
+      view.shadow.alpha = falling ? 0.65 : height.shadowAlpha * Math.max(0.25, shadowShrink);
+      drawRigShadow(view.shadow, view.look, form, accentOf(view));
+
+      view.root.position.set(x + Math.cos(view.wobbleTime * 11) * spinWobble, screenY(y, z) + Math.sin(view.wobbleTime * 11) * spinWobble);
+      const lift = 1 + z * height.scalePerUnit;
+      view.root.scale.set(lift);
+      view.squashNode.rotation = view.squashAngle;
+      view.squashNode.scale.set(1 - view.squash, 1 + view.squash * 0.6);
+      const wobbleRate = view.formName === 'stunnedOpen' ? look.stunnedWobblePerSecond : look.wobblePerSecond;
+      const tilt = form.wobble * look.wobbleRadians * Math.sin(view.wobbleTime * wobbleRate);
+      view.formNode.rotation = -view.squashAngle + tilt;
+      view.formNode.scale.set(form.wide, form.tall * (1 - form.wobble * 0.12));
+      view.blades.rotation = view.toppled ? view.blades.rotation : view.angle;
+      const dimmed = 1 - form.dim * 0.35;
+      view.shape.alpha = view.toppled ? 0.55 : dimmed;
+      view.blades.alpha = view.toppled ? 0.55 : dimmed;
+      view.flash.alpha = view.flashTime > 0 ? view.flashTime / fx().flashSeconds : 0;
+
+      const aim = Math.atan2(view.aimY, view.aimX);
+      drawRigShape(view.shape, view.look, form, look, accentOf(view), aim, view.wrapTime > 0);
+      drawRigBlades(view.blades, view.look, form, look);
       drawTells(view);
     }
-    drawTethers(dt);
+    drawOverlay(dt);
     emitter.update(dt);
   };
 
+  /** One Rig's side of a landed hit (outcomeFx.json). `angle` points from attacker to defender. */
+  const applyEffect = (view: RigView, name: string, angle: number, squash: number, other: RigView | undefined) => {
+    const outcome = outcomes();
+    switch (name) {
+      case 'squash':
+        view.squashAngle = angle;
+        view.squash = squash;
+        break;
+      case 'keepForm':
+        view.holdFormTime = outcome.holdFormSeconds;
+        view.squashAngle = angle;
+        view.squash = squash * 0.4;
+        break;
+      case 'snapTip':
+        snapToRound(view);
+        view.squashAngle = angle;
+        view.squash = squash;
+        break;
+      case 'snapArm':
+        view.form.armExtend = 0;
+        view.form.armClose = 0;
+        view.squashAngle = angle;
+        view.squash = squash;
+        break;
+      case 'parryFlash':
+        view.rimFlashTime = outcome.rimFlashSeconds;
+        view.squashAngle = angle;
+        view.squash = squash * 0.3;
+        break;
+      case 'wrap':
+        view.wrapTime = fx().tells.tether.seconds;
+        if (other) activeTethers.push({ from: viewId(view), to: viewId(other), time: fx().tells.tether.seconds });
+        break;
+      case 'pull':
+        view.squashAngle = angle;
+        view.squash = -outcome.pullStretch;
+        break;
+      case 'crush':
+        view.squashAngle = -Math.PI / 2;
+        view.squash = squash;
+        view.form.splay = Math.max(view.form.splay, 0.6);
+        break;
+      case 'bounce':
+        view.squashAngle = -Math.PI / 2;
+        view.squash = -squash * 0.4;
+        break;
+      case 'retract':
+        view.form.armExtend = 0;
+        break;
+      default:
+        break;
+    }
+  };
+  const ids = new Map<RigView, number>();
+  const viewId = (view: RigView) => ids.get(view) ?? -1;
+
   return [
-    // A dragged attack button aims live: the glyph turns with the finger during the wind-up.
+    // A dragged attack button aims live: the form turns with the finger during the wind-up.
     on(SpinnerCommandIssued, 'rig.view.onCommandAim', (batch) => {
       for (let i = 0; i < batch.count; i++) {
         const view = views.get(rigOfSpinner(batch.cols.spinnerId[i]));
@@ -251,14 +347,16 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
         const old = views.get(rigId);
         old?.root.destroy({ children: true });
         old?.shadow.destroy();
-        old?.marker.destroy();
+        if (old) ids.delete(old);
         const radius = batch.cols.radius[i];
-        const { body, flash } = drawRig({ radius, color: batch.cols.color[i], accentColor: batch.cols.accentColor[i], blades: batch.cols.blades[i] });
+        const look: RigLook = { radius, color: batch.cols.color[i], accentColor: batch.cols.accentColor[i], blades: batch.cols.blades[i] };
         const root = new Container();
-        const reach = ctx.data.moves.moveTuning.moves.whirl?.reachRatio ?? 1.5;
-        const ringLook = ctx.data.brawl.brawlFx.whirlRing;
-        const ring = new Graphics().circle(0, 0, radius * reach).stroke({ color: ringLook.color, width: ringLook.width, alpha: ringLook.alpha });
-        ring.visible = false;
+        const squashNode = new Container();
+        const formNode = new Container();
+        const shape = new Graphics();
+        const blades = new Graphics();
+        const flash = new Graphics().circle(0, 0, radius * 1.1).fill({ color: '#ffffff' });
+        flash.alpha = 0;
         const tell = new Graphics();
         const cancelLook = ctx.data.brawl.brawlFx.tells.revCancel;
         const hudFont = ctx.data.hud.hud.font;
@@ -269,28 +367,23 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
         revLabel.anchor.set(0.5, 0);
         revLabel.y = radius * 1.45;
         revLabel.visible = false;
-        root.addChild(ring, tell, body, revLabel);
-        const shadow = new Graphics().circle(0, 0, radius).fill({ color: '#000000' });
-        const markerLook = ctx.data.brawl.brawlFx.tells.landingMarker;
-        const marker = new Graphics()
-          .circle(0, 0, radius * 1.3)
-          .moveTo(-radius * 1.6, 0)
-          .lineTo(radius * 1.6, 0)
-          .moveTo(0, -radius * 1.6)
-          .lineTo(0, radius * 1.6)
-          .stroke({ color: markerLook.color, width: markerLook.width, alpha: markerLook.alpha });
-        const diveGlyph = ctx.data.moves.moveGlyphs.glyphs.dive;
-        if (diveGlyph) drawGlyph(marker, diveGlyph.path, diveGlyph.color, radius, 0, 0, 0);
-        marker.visible = false;
-        shadows.addChild(shadow, marker);
+        formNode.addChild(shape, blades, flash);
+        squashNode.addChild(formNode);
+        root.addChild(tell, squashNode, revLabel);
+        const shadow = new Graphics();
+        shadows.addChild(shadow);
         rigs.addChild(root);
-        views.set(rigId, {
-          root, shadow, body, flash, ring, tell, marker, radius, move: '', moveAge: 0,
+        const view: RigView = {
+          root, squashNode, formNode, shape, blades, flash, shadow, tell, look, radius,
+          form: copyForm(ctx.data.rig.rigForms.round), formName: 'default', holdFormTime: 0,
+          move: '', moveAge: 0,
           aimX: batch.cols.slot[i] % 2 === 0 ? 1 : -1, aimY: 0, vx: 0, vy: 0, refusedTime: 0, gear: 0, color: batch.cols.color[i], rank: 0, revLabel, charge: 0,
           colors: [batch.cols.color[i], batch.cols.accentColor[i], '#0d0b18'],
           prevX: 0, prevY: 0, prevZ: 0, x: 0, y: 0, z: 0, angle: 0, spinRatio: 1,
-          squash: 0, flashTime: 0, wobbleTime: 0, gone: false, toppled: false,
-        });
+          squash: 0, squashAngle: 0, flashTime: 0, rimFlashTime: 0, wrapTime: 0, wobbleTime: 0, gone: false, toppled: false,
+        };
+        views.set(rigId, view);
+        ids.set(view, rigId);
       }
     }),
     on(RoundStarted, 'rig.view.onRoundStarted', () => {
@@ -300,8 +393,13 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
         view.spinRatio = 1;
         view.squash = 0;
         view.refusedTime = 0;
+        view.holdFormTime = 0;
+        view.rimFlashTime = 0;
+        view.wrapTime = 0;
+        Object.assign(view.form, ctx.data.rig.rigForms.round);
       }
       activeTethers.length = 0;
+      rings.length = 0;
     }),
     on(StateEntered, 'rig.view.onMoveState', (batch) => {
       for (let i = 0; i < batch.count; i++) {
@@ -327,7 +425,7 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
         view.vy = batch.cols.vy[i];
       }
     }),
-    // A move's aim (the stick, else where the Rig is heading) orients its tell.
+    // A move's aim (the stick, else where the Rig is heading) orients its form.
     on(MoveStarted, 'rig.view.onMoveStarted', (batch) => {
       for (let i = 0; i < batch.count; i++) {
         const view = views.get(batch.cols.rigId[i]);
@@ -374,25 +472,35 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
         if (view) view.spinRatio = batch.cols.spinRatio[i];
       }
     }),
+    // The clash: each hit plays out on the two forms so the player sees why it went that way.
     on(HitLanded, 'rig.view.onHitLanded', (batch) => {
+      const outcome = outcomes();
       for (let i = 0; i < batch.count; i++) {
         const defender = views.get(batch.cols.defenderId[i]);
         const attacker = views.get(batch.cols.attackerId[i]);
+        const effect = outcome.effects[batch.cols.hit[i]] ?? outcome.effects.default;
+        if (debug.hits.length < 200) debug.hits.push(`${batch.cols.hit[i]}:${effect.attacker}/${effect.defender}`);
+        const angle = Math.atan2(batch.cols.ny[i], batch.cols.nx[i]);
         if (defender) {
           defender.flashTime = fx().flashSeconds;
-          defender.squash = fx().squash.hitAmount;
+          applyEffect(defender, effect.defender, angle, effect.squash, attacker);
         }
-        if (attacker) attacker.squash = fx().squash.hitAmount * 0.5;
-        const spec = ctx.data.brawl.hits[batch.cols.hit[i]];
-        if (spec?.aimKnockback || (spec?.launchVz ?? 0) < 0) {
-          activeTethers.push({ from: batch.cols.attackerId[i], to: batch.cols.defenderId[i], time: fx().tells.tether.seconds });
-        }
+        if (attacker) applyEffect(attacker, effect.attacker, angle, effect.squash, defender);
+        const color = effect.fragmentColor === 'attacker' ? (attacker?.color ?? '#ffffff') : effect.fragmentColor === 'defender' ? (defender?.color ?? '#ffffff') : effect.fragmentColor;
+        const at = defender ?? attacker;
+        const fy = at ? screenY(batch.cols.y[i], at.z) : batch.cols.y[i];
+        const spread = effect.fragmentsAlong === 'around' ? TAU : outcome.fragment.spread;
+        const direction = effect.fragmentsAlong === 'back' ? angle + Math.PI : angle;
+        fragments(batch.cols.x[i], fy, effect.fragments, color, direction, spread, at?.radius ?? 20);
+        if (effect.ring > 0 && at) rings.push({ x: batch.cols.x[i], y: batch.cols.y[i], age: 0, radius: at.radius * effect.ring });
       }
     }),
     on(Landed, 'rig.view.onLanded', (batch) => {
       for (let i = 0; i < batch.count; i++) {
         const view = views.get(batch.cols.rigId[i]);
-        if (view) view.squash = Math.min(0.45, fx().squash.landAmount * Math.min(1, batch.cols.impactSpeed[i] / 600));
+        if (!view) continue;
+        view.squashAngle = -Math.PI / 2;
+        view.squash = Math.min(0.45, fx().squash.landAmount * Math.min(1, batch.cols.impactSpeed[i] / 600));
       }
     }),
     on(RoundFinished, 'rig.view.onRoundFinished', (batch) => {

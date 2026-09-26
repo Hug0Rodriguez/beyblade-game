@@ -116,19 +116,40 @@ export interface CameraData {
   readonly finishPunch: number;
 }
 
+/** What the two Rigs do on the frame a hit lands (outcomeFx.json): the clash shows why it went that way. */
+export interface OutcomeEffect {
+  readonly attacker: string;
+  readonly defender: string;
+  readonly fragments: number;
+  /** "attacker" / "defender" (that Rig's colour) or a hex colour. */
+  readonly fragmentColor: string;
+  readonly fragmentsAlong: 'n' | 'back' | 'around';
+  /** Ground ring radius as a multiple of the defender's radius (0 = none). */
+  readonly ring: number;
+  /** Directional squash of the defender along the hit normal. */
+  readonly squash: number;
+}
+
+export interface OutcomeFxData {
+  readonly effects: Readonly<Record<string, OutcomeEffect>>;
+  readonly fragment: { readonly speedMin: number; readonly speedMax: number; readonly life: number; readonly sizeRatio: number; readonly drag: number; readonly spread: number };
+  readonly ring: { readonly seconds: number; readonly width: number; readonly alpha: number; readonly color: string };
+  readonly holdFormSeconds: number;
+  readonly pullStretch: number;
+  readonly pullSeconds: number;
+  readonly rimFlashSeconds: number;
+  readonly wrapArcRadians: number;
+  readonly wrapRadiusRatio: number;
+}
+
 export interface BrawlFxData {
-  readonly sparks: BurstData & { readonly perDamage: number; readonly maxCount: number; readonly colors: readonly string[] };
   readonly bumpSparks: BurstData & { readonly minSpeed: number };
   readonly wallSparks: BurstData & { readonly minSpeed: number };
   /** Particles when a move starts, by move name. "behind" = opposite the aim, "around" = all around. */
   readonly moveBursts: Readonly<Record<string, BurstData & { readonly direction: 'behind' | 'around' }>>;
   /** Tells: what a Rig shows before its move lands, and the feedback for committed or refused presses. */
   readonly tells: {
-    readonly revUp: { readonly moves: readonly string[]; readonly color: string; readonly arrowLength: number; readonly width: number; readonly alpha: number; readonly flashPerSecond: number };
-    readonly reach: { readonly moves: readonly string[]; readonly color: string; readonly width: number; readonly alpha: number };
     readonly recover: { readonly moves: readonly string[]; readonly color: string; readonly alpha: number; readonly pulsePerSecond: number };
-    readonly stunned: { readonly moves: readonly string[]; readonly color: string; readonly alpha: number; readonly starCount: number; readonly orbitPerSecond: number };
-    readonly landingMarker: { readonly moves: readonly string[]; readonly color: string; readonly alpha: number; readonly width: number };
     readonly refused: { readonly color: string; readonly seconds: number };
     readonly tether: { readonly color: string; readonly width: number; readonly seconds: number };
     /** The inviting sign while a Rev Cancel is available (recovering or stunned, with a Rank to spend). */
@@ -136,8 +157,6 @@ export interface BrawlFxData {
     /** The Shatter charging at ZENITH: an arc filling around the Rig, pulsing once charged. */
     readonly shatterCharge: { readonly color: string; readonly width: number; readonly alpha: number; readonly readyPulsePerSecond: number };
   };
-  /** Ring drawn around a Rig while it is in one of `moves` (its reach). */
-  readonly whirlRing: { readonly color: string; readonly width: number; readonly alpha: number; readonly moves: readonly string[]; readonly spinBoost: number };
   readonly landingDust: BurstData & { readonly minImpact: number };
   readonly trail: { readonly length: number; readonly widthRatio: number; readonly alpha: number; readonly minSpeed: number; readonly surplusAlpha: number };
   readonly shake: { readonly decayPerSecond: number; readonly frequency: number; readonly maxOffset: number; readonly finishKick: number };
@@ -162,6 +181,7 @@ export interface BrawlFxData {
 }
 
 export interface BrawlData {
+  readonly outcomeFx: OutcomeFxData;
   readonly motion: MotionData;
   readonly hitOutcomes: readonly HitOutcomeRule[];
   readonly hits: Readonly<Record<string, HitSpec>>;

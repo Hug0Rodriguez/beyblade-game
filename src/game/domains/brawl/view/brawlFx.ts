@@ -13,6 +13,8 @@ import { RoundFinished, RoundStarted } from '../../../messages/roundMessages';
 import type { ViewContext } from '../../../shared/domainContext';
 
 interface TrackedRig {
+  /** Current moveFlow state (its form decides the trail). */
+  move: string;
   prevX: number;
   prevY: number;
   prevZ: number;
@@ -48,7 +50,7 @@ export function brawlFxHandlers(ctx: ViewContext): HandlerDef[] {
     if (!rig) {
       const trail = createRibbonTrail(ctx.data.boot.capacities.trailPoints);
       ctx.screens.layer('trails').addChild(trail.view);
-      rig = { prevX: 0, prevY: 0, prevZ: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, radius: 20, baseSpeed: 1, color: '#ffffff', trailColor: '#ffffff', trail };
+      rig = { move: '', prevX: 0, prevY: 0, prevZ: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, radius: 20, baseSpeed: 1, color: '#ffffff', trailColor: '#ffffff', trail };
       rigs.set(rigId, rig);
     }
     return rig;
@@ -112,6 +114,11 @@ export function brawlFxHandlers(ctx: ViewContext): HandlerDef[] {
     }),
     on(StateEntered, 'brawl.view.onFlowState', (batch) => {
       for (let i = 0; i < batch.count; i++) {
+        if (batch.cols.fsm[i] === ctx.data.moves.moveTuning.fsm) {
+          const rig = rigs.get(batch.cols.instance[i]);
+          if (rig) rig.move = batch.cols.state[i];
+          continue;
+        }
         if (batch.cols.fsm[i] !== ctx.data.screens.screens.fsm) continue;
         following = ctx.data.flow.activity.simulation.includes(batch.cols.state[i]);
       }
@@ -134,20 +141,11 @@ export function brawlFxHandlers(ctx: ViewContext): HandlerDef[] {
         if (teleported) rig.trail.reset();
       }
     }),
+    // Hit-stop, shake and the camera punch: the clash itself is drawn on the Rigs (rigViews, outcomeFx.json).
     on(HitLanded, 'brawl.view.onHitLanded', (batch) => {
-      const { sparks, hitStopScale } = fx();
+      const { hitStopScale } = fx();
       for (let i = 0; i < batch.count; i++) {
         const spec = ctx.data.brawl.hits[batch.cols.hit[i]];
-        const count = Math.min(sparks.maxCount, Math.ceil(sparks.count + batch.cols.damage[i] * sparks.perDamage));
-        const angle = Math.atan2(batch.cols.ny[i], batch.cols.nx[i]);
-        for (const direction of [angle + Math.PI / 2, angle - Math.PI / 2, angle]) {
-          emitter.emit(
-            batch.cols.x[i],
-            batch.cols.y[i],
-            { ...sparks, count: Math.ceil(count / 3), angle: direction, spread: sparks.spread ?? 1, color: random.pick(sparks.colors) },
-            random.next,
-          );
-        }
         const kick = spec?.shake ?? 0;
         shake.kick(kick);
         camera.punch(kick * ctx.data.brawl.camera.hitPunchPerShake);
@@ -223,7 +221,15 @@ export function brawlFxHandlers(ctx: ViewContext): HandlerDef[] {
         const speed = Math.hypot(rig.vx, rig.vy);
         if (speed >= trail.minSpeed) rig.trail.push(lerp(rig.prevX, rig.x, alpha), lerp(rig.prevY, rig.y, alpha) - lerp(rig.prevZ, rig.z, alpha) * lift);
         const surplus = speed > rig.baseSpeed * 1.05;
-        rig.trail.redraw({ length: trail.length, width: rig.radius * trail.widthRatio, color: rig.trailColor, alpha: surplus ? trail.surplusAlpha : trail.alpha });
+        // A strike form (the needle) leaves a thin hard line; everything else the soft Gear-coloured ribbon.
+        const forms = ctx.data.rig.rigForms;
+        const formTrail = forms.forms[forms.states[rig.move] ?? 'default']?.trail;
+        rig.trail.redraw({
+          length: trail.length,
+          width: rig.radius * (formTrail?.widthRatio ?? trail.widthRatio),
+          color: rig.trailColor,
+          alpha: formTrail?.alpha ?? (surplus ? trail.surplusAlpha : trail.alpha),
+        });
       }
       emitter.update(dt);
       shake.update(dt, fx().shake);

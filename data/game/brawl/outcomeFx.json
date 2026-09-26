@@ -1,0 +1,26 @@
+{
+  "effects": {
+    "default":     { "attacker": "none",       "defender": "squash",  "fragments": 0, "fragmentColor": "defender", "fragmentsAlong": "n",      "ring": 0,   "squash": 0.28 },
+    "strike":      { "attacker": "keepForm",   "defender": "squash",  "fragments": 6, "fragmentColor": "#36d6ff",  "fragmentsAlong": "n",      "ring": 0,   "squash": 0.3 },
+    "airStrike":   { "attacker": "keepForm",   "defender": "squash",  "fragments": 6, "fragmentColor": "#36d6ff",  "fragmentsAlong": "n",      "ring": 0,   "squash": 0.3 },
+    "outOfTheAir": { "attacker": "keepForm",   "defender": "squash",  "fragments": 8, "fragmentColor": "#36d6ff",  "fragmentsAlong": "n",      "ring": 0,   "squash": 0.34 },
+    "deflect":     { "attacker": "parryFlash", "defender": "snapTip", "fragments": 4, "fragmentColor": "#36d6ff",  "fragmentsAlong": "back",   "ring": 0,   "squash": 0.3 },
+    "interrupt":   { "attacker": "keepForm",   "defender": "snapArm", "fragments": 3, "fragmentColor": "#b28cff",  "fragmentsAlong": "n",      "ring": 0,   "squash": 0.3 },
+    "sling":       { "attacker": "wrap",       "defender": "pull",    "fragments": 0, "fragmentColor": "defender", "fragmentsAlong": "n",      "ring": 0,   "squash": 0 },
+    "spike":       { "attacker": "wrap",       "defender": "pull",    "fragments": 0, "fragmentColor": "defender", "fragmentsAlong": "n",      "ring": 1.8, "squash": 0 },
+    "punish":      { "attacker": "bounce",     "defender": "crush",   "fragments": 3, "fragmentColor": "defender", "fragmentsAlong": "around", "ring": 3.2, "squash": 0.5 },
+    "slam":        { "attacker": "bounce",     "defender": "crush",   "fragments": 0, "fragmentColor": "defender", "fragmentsAlong": "around", "ring": 2.0, "squash": 0.35 },
+    "clash":       { "attacker": "snapTip",    "defender": "snapTip", "fragments": 6, "fragmentColor": "#ffffff",  "fragmentsAlong": "around", "ring": 0,   "squash": 0.2 },
+    "grabSlip":    { "attacker": "retract",    "defender": "retract", "fragments": 0, "fragmentColor": "defender", "fragmentsAlong": "n",      "ring": 0,   "squash": 0.1 },
+    "wallSplat":   { "attacker": "none",       "defender": "squash",  "fragments": 0, "fragmentColor": "defender", "fragmentsAlong": "n",      "ring": 2.2, "squash": 0.45 },
+    "shatter":     { "attacker": "keepForm",   "defender": "crush",   "fragments": 0, "fragmentColor": "defender", "fragmentsAlong": "n",      "ring": 4.0, "squash": 0.5 }
+  },
+  "fragment": { "speedMin": 140, "speedMax": 420, "life": 0.45, "sizeRatio": 0.22, "drag": 3.5, "spread": 0.9 },
+  "ring": { "seconds": 0.32, "width": 3, "alpha": 0.8, "color": "#ffffff" },
+  "holdFormSeconds": 0.1,
+  "pullStretch": 0.3,
+  "pullSeconds": 0.25,
+  "rimFlashSeconds": 0.16,
+  "wrapArcRadians": 4.2,
+  "wrapRadiusRatio": 1.18
+}

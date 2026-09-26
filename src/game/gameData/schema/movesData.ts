@@ -62,7 +62,6 @@ export interface MoveGlyphsData {
   readonly triangle: readonly string[];
   /** Hit name (hits.json) → the glyph of the move that won it. */
   readonly hitGlyphs: Readonly<Record<string, string>>;
-  readonly dishTells: { readonly glyphSizeRatio: number; readonly glyphDistanceRatio: number; readonly glyphWidth: number; readonly glyphAlpha: number };
 }
 
 export interface MovesData {

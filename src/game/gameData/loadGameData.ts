@@ -26,7 +26,7 @@ export function loadGameData(source: JsonModules = modules): GameData {
       tacticCommands: tree.get('spinner/cpu/tacticCommands.json'),
       cpuCombos: tree.get('spinner/cpu/cpuCombos.json'),
     },
-    rig: { rigs: tree.get('rig/rigs.json'), rigRules: tree.get('rig/rigRules.json') },
+    rig: { rigs: tree.get('rig/rigs.json'), rigForms: tree.get('rig/rigForms.json'), rigRules: tree.get('rig/rigRules.json') },
     moves: {
       moveFlow: tree.get('moves/moveFlow.json'),
       moveTable: tree.get('moves/moveTable.json'),
@@ -34,6 +34,7 @@ export function loadGameData(source: JsonModules = modules): GameData {
       moveGlyphs: tree.get('moves/moveGlyphs.json'),
     },
     brawl: {
+      outcomeFx: tree.get('brawl/outcomeFx.json'),
       motion: tree.get('brawl/motion.json'),
       hitOutcomes: tree.get('brawl/hitOutcomes.json'),
       hits: tree.get('brawl/hits.json'),

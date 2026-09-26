@@ -1,0 +1,47 @@
+{
+  "round": {
+    "along": 1, "across": 1, "tip": 0, "rimWidth": 0, "discScale": 1, "bladeFold": 0, "splay": 0,
+    "wobble": 0, "dim": 0, "armExtend": 0, "armClose": 0, "tall": 1, "wide": 1, "shadowScale": 1, "shadowRing": 0, "spinBoost": 1
+  },
+  "forms": {
+    "default": { "easeSeconds": 0.09 },
+    "needleWindup": { "along": 0.8, "across": 1.15, "tip": 0.5, "bladeFold": 0.6, "easeSeconds": 0.05, "accent": "#36d6ff" },
+    "needle": { "along": 2.2, "across": 0.7, "tip": 1, "bladeFold": 1, "easeSeconds": 0.045, "accent": "#36d6ff", "trail": { "widthRatio": 0.35, "alpha": 1 } },
+    "shell": { "discScale": 1.5, "rimWidth": 0.3, "bladeFold": 1, "shadowScale": 0.9, "spinBoost": 2.5, "easeSeconds": 0.07, "accent": "#ff9d3c" },
+    "clawReach": { "armExtend": 1, "armClose": 0, "easeSeconds": 0.08, "accent": "#b28cff" },
+    "clawGrab": { "armExtend": 1, "armClose": 1, "easeSeconds": 0.045, "accent": "#b28cff" },
+    "weight": { "tall": 1.4, "wide": 0.8, "dim": 0.3, "shadowScale": 2.2, "shadowRing": 1, "easeSeconds": 0.1, "accent": "#b6ff5c" },
+    "open": { "splay": 1, "wobble": 0.6, "dim": 0.35, "easeSeconds": 0.08, "accent": "#b6ff5c" },
+    "stunnedOpen": { "splay": 1, "wobble": 1, "dim": 0.5, "easeSeconds": 0.08, "accent": "#b6ff5c" },
+    "shatterNeedle": { "along": 3.5, "across": 0.6, "tip": 1, "bladeFold": 1, "easeSeconds": 0.05, "accent": "#fff6d5", "trail": { "widthRatio": 0.5, "alpha": 1 } }
+  },
+  "states": {
+    "dashRevUp": "needleWindup",
+    "dash": "needle",
+    "airDash": "needle",
+    "whirl": "shell",
+    "airWhirl": "shell",
+    "hookReach": "clawReach",
+    "hook": "clawGrab",
+    "airHook": "clawGrab",
+    "dive": "weight",
+    "dashRecover": "open",
+    "whirlRecover": "open",
+    "hookRecover": "open",
+    "launched": "open",
+    "stunned": "stunnedOpen",
+    "shatter": "shatterNeedle"
+  },
+  "look": {
+    "armWidthRatio": 0.25,
+    "armReachRatio": 1.9,
+    "rimTickCount": 8,
+    "gapRadians": 0.9,
+    "tipWidthRatio": 0.28,
+    "wobbleRadians": 0.22,
+    "wobblePerSecond": 9,
+    "stunnedWobblePerSecond": 4,
+    "outlineColor": "#0d0b18",
+    "shadowGrowPerUnit": 0.002
+  }
+}

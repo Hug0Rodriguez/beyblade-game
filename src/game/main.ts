@@ -26,6 +26,7 @@ import type { DomainContext, ViewContext } from './shared/domainContext';
 import { selectedDish } from './shared/dataLookups';
 import './gui/hud.css';
 import { guiTokens } from './gui/guiTokens';
+import { formGalleryHandlers } from './dev/formGallery';
 
 /** Composition root: config → data → runtime → bus → world → routes → boot messages → loop. */
 async function main(): Promise<void> {
@@ -62,12 +63,15 @@ async function main(): Promise<void> {
 
   const timeScale = createTimeScale();
   const world = createWorld(domainRegistry, ctx);
-  registerHandlers(bus, domainRegistry, world, ctx, view, [...screens.handlers(), ...gui.handlers(), ...timeScale.handlers()]);
+  const query = new URLSearchParams(location.search);
+  const gallery = formGalleryHandlers(view, ['needleWindup', 'needle', 'shell', 'clawReach', 'clawGrab', 'weight', 'open'], query.has('gallery'));
+  registerHandlers(bus, domainRegistry, world, ctx, view, [...screens.handlers(), ...gui.handlers(), ...timeScale.handlers(), ...gallery]);
 
   attachKeyboardDevice(bus, watchedKeyCodes(data));
   attachPointerDevice(bus, parent, app.canvas);
   if (engine.runtime.fullscreenOnTouch) attachFullscreenOnTouch(parent);
-  if (new URLSearchParams(location.search).has('debug')) createTouchReadout(parent, app);
+  if (query.has('debug')) createTouchReadout(parent, app);
+  if (query.has('gallery')) gui.root.style.display = 'none'; // the forms alone, no words: the silhouette test
   if (dev) {
     bus.observe(createMessageLog(engine.dev.messageLogKey, engine.dev.messageLogQuiet));
     void createTuningPanel(data as unknown as Record<string, unknown>, {

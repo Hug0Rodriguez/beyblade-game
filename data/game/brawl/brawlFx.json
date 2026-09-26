@@ -1,19 +1,4 @@
 {
-  "sparks": {
-    "count": 14,
-    "perDamage": 1.2,
-    "maxCount": 46,
-    "speedMin": 140,
-    "speedMax": 520,
-    "life": 0.4,
-    "size": 4,
-    "spread": 1.3,
-    "drag": 3.2,
-    "colors": [
-      "#ffffff",
-      "#ffe14a"
-    ]
-  },
   "bumpSparks": {
     "count": 6,
     "speedMin": 60,
@@ -79,16 +64,6 @@
     "shadowOffset": 4
   },
   "moveBursts": {
-    "airDash": {
-      "count": 10,
-      "speedMin": 60,
-      "speedMax": 180,
-      "life": 0.3,
-      "size": 4,
-      "spread": 0.5,
-      "drag": 3,
-      "direction": "behind"
-    },
     "pop": {
       "count": 8,
       "speedMin": 40,
@@ -98,38 +73,6 @@
       "spread": 6.283,
       "drag": 4,
       "color": "#b6ff5c",
-      "direction": "around"
-    },
-    "dive": {
-      "count": 12,
-      "speedMin": 120,
-      "speedMax": 300,
-      "life": 0.3,
-      "size": 4,
-      "spread": 0.6,
-      "drag": 3,
-      "direction": "behind"
-    },
-    "whirl": {
-      "count": 18,
-      "speedMin": 180,
-      "speedMax": 260,
-      "life": 0.22,
-      "size": 3,
-      "spread": 6.283,
-      "drag": 2,
-      "color": "#ff9d3c",
-      "direction": "around"
-    },
-    "airWhirl": {
-      "count": 18,
-      "speedMin": 180,
-      "speedMax": 260,
-      "life": 0.22,
-      "size": 3,
-      "spread": 6.283,
-      "drag": 2,
-      "color": "#ff9d3c",
       "direction": "around"
     },
     "breakOut": {
@@ -153,71 +96,7 @@
       "drag": 2.5,
       "color": "#ff4fd8",
       "direction": "behind"
-    },
-    "dash": {
-      "count": 10,
-      "speedMin": 60,
-      "speedMax": 180,
-      "life": 0.3,
-      "size": 4,
-      "spread": 0.5,
-      "drag": 3,
-      "direction": "behind"
-    },
-    "dashRevUp": {
-      "count": 6,
-      "speedMin": 20,
-      "speedMax": 80,
-      "life": 0.2,
-      "size": 3,
-      "spread": 6.283,
-      "drag": 4,
-      "color": "#36d6ff",
-      "direction": "around"
-    },
-    "hookReach": {
-      "count": 6,
-      "speedMin": 20,
-      "speedMax": 80,
-      "life": 0.2,
-      "size": 3,
-      "spread": 6.283,
-      "drag": 4,
-      "color": "#b28cff",
-      "direction": "around"
-    },
-    "hook": {
-      "count": 10,
-      "speedMin": 80,
-      "speedMax": 200,
-      "life": 0.2,
-      "size": 3,
-      "spread": 1.2,
-      "drag": 3,
-      "color": "#b28cff",
-      "direction": "around"
-    },
-    "airHook": {
-      "count": 10,
-      "speedMin": 80,
-      "speedMax": 200,
-      "life": 0.2,
-      "size": 3,
-      "spread": 1.2,
-      "drag": 3,
-      "color": "#b28cff",
-      "direction": "around"
     }
-  },
-  "whirlRing": {
-    "color": "#ff9d3c",
-    "width": 3,
-    "alpha": 0.8,
-    "moves": [
-      "whirl",
-      "airWhirl"
-    ],
-    "spinBoost": 2.5
   },
   "shatter": {
     "startSlowMo": {
@@ -241,26 +120,6 @@
     }
   },
   "tells": {
-    "revUp": {
-      "moves": [
-        "dashRevUp"
-      ],
-      "color": "#36d6ff",
-      "arrowLength": 2.4,
-      "width": 4,
-      "alpha": 0.9,
-      "flashPerSecond": 24
-    },
-    "reach": {
-      "moves": [
-        "hookReach",
-        "hook",
-        "airHook"
-      ],
-      "color": "#b28cff",
-      "width": 3,
-      "alpha": 0.85
-    },
     "recover": {
       "moves": [
         "dashRecover",
@@ -270,24 +129,6 @@
       "color": "#b6ff5c",
       "alpha": 0.45,
       "pulsePerSecond": 10
-    },
-    "stunned": {
-      "moves": [
-        "stunned",
-        "launched"
-      ],
-      "color": "#b6ff5c",
-      "alpha": 0.7,
-      "starCount": 3,
-      "orbitPerSecond": 6
-    },
-    "landingMarker": {
-      "moves": [
-        "dive"
-      ],
-      "color": "#ffffff",
-      "alpha": 0.6,
-      "width": 2
     },
     "refused": {
       "color": "#ff3355",
