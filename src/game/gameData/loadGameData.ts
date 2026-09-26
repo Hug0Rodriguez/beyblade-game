@@ -31,6 +31,7 @@ export function loadGameData(source: JsonModules = modules): GameData {
       moveFlow: tree.get('moves/moveFlow.json'),
       moveTable: tree.get('moves/moveTable.json'),
       moveTuning: tree.get('moves/moveTuning.json'),
+      moveGlyphs: tree.get('moves/moveGlyphs.json'),
     },
     brawl: {
       motion: tree.get('brawl/motion.json'),

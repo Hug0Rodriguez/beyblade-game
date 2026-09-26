@@ -16,6 +16,7 @@ import { rigOfSpinner } from '../../../shared/ids';
  */
 export function touchControlsViewHandlers(ctx: ViewContext): HandlerDef[] {
   const touch = ctx.data.spinner.touch;
+  const glyphs = ctx.data.moves.moveGlyphs;
   const layer = ctx.gui.layer('touch');
   layer.classList.add('touch-layer');
   layer.style.display = 'none';
@@ -43,9 +44,27 @@ export function touchControlsViewHandlers(ctx: ViewContext): HandlerDef[] {
     });
     button.element.classList.add(`pad-${spec.slot}`);
     button.element.classList.toggle('hidden', spec.onlyWhenShatterReady === true);
+    const glyph = glyphs.glyphs[glyphs.buttonGlyphs[spec.widget] ?? ''];
+    if (glyph) button.setGlyph(glyph.path);
     pad.appendChild(button.element);
     return { spec, button };
   });
+
+  /**
+   * The inviting sign: the rival's move state names a glyph, its role names a counter, and the
+   * answering button lights up in the rival's colour with their glyph in its corner.
+   */
+  const showCounterHint = (rivalMove: string) => {
+    const rivalGlyph = Object.values(glyphs.glyphs).find((glyph) => glyph.moves.includes(rivalMove));
+    const vulnerable = ctx.data.moves.moveTuning.vulnerableStates.includes(rivalMove);
+    const sees = vulnerable ? 'vulnerable' : rivalGlyph?.role;
+    const sign = sees ? glyphs.counters.find((counter) => counter.sees === sees) : undefined;
+    const shown = sign && (rivalGlyph ?? glyphs.glyphs.dive);
+    for (const { spec, button } of buttons) {
+      if (sign && shown && spec.widget === sign.button) button.setHint(shown.path, shown.color);
+      else button.setHint(null);
+    }
+  };
 
   const humanRigs = new Set<number>();
   let shatterReady = false;
@@ -74,7 +93,9 @@ export function touchControlsViewHandlers(ctx: ViewContext): HandlerDef[] {
     }),
     on(StateEntered, 'spinner.view.onMoveState', (batch) => {
       for (let i = 0; i < batch.count; i++) {
-        if (batch.cols.fsm[i] === ctx.data.moves.moveTuning.fsm && humanRigs.has(batch.cols.instance[i])) move = batch.cols.state[i];
+        if (batch.cols.fsm[i] !== ctx.data.moves.moveTuning.fsm) continue;
+        if (humanRigs.has(batch.cols.instance[i])) move = batch.cols.state[i];
+        else showCounterHint(batch.cols.state[i]);
       }
       refreshChord();
     }),

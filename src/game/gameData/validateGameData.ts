@@ -61,6 +61,30 @@ export function validateGameData(data: GameData): void {
     if ('moves' in look) look.moves.forEach((state) => v.requireRef(`brawl/brawlFx.tells.${tell}.moves`, state, moves.moveFlow.states));
   }
 
+  // Move glyphs: one shape per move, and the counter signs point at real glyphs and buttons.
+  const glyphs = moves.moveGlyphs;
+  const glyphNames = Object.keys(glyphs.glyphs);
+  const kinds = new Set(Object.values(moves.moveTuning.moves).map((spec) => spec.attackKind));
+  for (const [name, glyph] of Object.entries(glyphs.glyphs)) {
+    glyph.moves.forEach((state) => v.requireRef(`moves/moveGlyphs.glyphs.${name}.moves`, state, moves.moveFlow.states));
+    v.requireRef(`moves/moveGlyphs.glyphs.${name}.role`, glyph.role, [...kinds]);
+  }
+  const touchWidgets = spinner.touch.buttons.map((button) => button.widget);
+  for (const [widget, glyph] of Object.entries(glyphs.buttonGlyphs)) {
+    v.requireRef('moves/moveGlyphs.buttonGlyphs (widget)', widget, touchWidgets);
+    v.requireRef(`moves/moveGlyphs.buttonGlyphs.${widget}`, glyph, glyphNames);
+  }
+  glyphs.counters.forEach((sign, i) => {
+    v.requireRef(`moves/moveGlyphs.counters[${i}].sees`, sign.sees, [...kinds, 'vulnerable']);
+    v.requireRef(`moves/moveGlyphs.counters[${i}].answer`, sign.answer, glyphNames);
+    v.requireRef(`moves/moveGlyphs.counters[${i}].button`, sign.button, touchWidgets);
+  });
+  glyphs.triangle.forEach((name) => v.requireRef('moves/moveGlyphs.triangle', name, glyphNames));
+  for (const [hit, glyph] of Object.entries(glyphs.hitGlyphs)) {
+    v.requireRef('moves/moveGlyphs.hitGlyphs (hit)', hit, Object.keys(brawl.hits));
+    v.requireRef(`moves/moveGlyphs.hitGlyphs.${hit}`, glyph, glyphNames);
+  }
+
   // Hits: every outcome names a hits.json row; hit events are moveFlow events.
   const hitNames = Object.keys(brawl.hits);
   brawl.hitOutcomes.forEach((row, i) => v.requireRef(`brawl/hitOutcomes[${i}].hit`, row.hit, hitNames));

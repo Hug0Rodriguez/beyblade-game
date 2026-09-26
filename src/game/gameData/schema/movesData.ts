@@ -33,9 +33,42 @@ export interface MoveRule extends ConditionRow {
   readonly move: string;
 }
 
+/** One move's silhouette: an SVG path in a 24×24 box pointing up (north = the aim), and its colour. */
+export interface MoveGlyph {
+  readonly label: string;
+  /** The attackKind it stands for (strike / guard / grab / slam / shatter / none). */
+  readonly role: string;
+  readonly color: string;
+  readonly path: string;
+  /** moveFlow states during which the Rig shows this glyph. */
+  readonly moves: readonly string[];
+}
+
+/** What beats what, as signs: the rival shows `sees`, the answer is `answer`, pressed on `button`. */
+export interface CounterSign {
+  /** An attackKind, or "vulnerable" (moveTuning.vulnerableStates). */
+  readonly sees: string;
+  readonly answer: string;
+  /** The touch button widget that answers. */
+  readonly button: string;
+}
+
+export interface MoveGlyphsData {
+  readonly glyphs: Readonly<Record<string, MoveGlyph>>;
+  /** Touch button widget → glyph. */
+  readonly buttonGlyphs: Readonly<Record<string, string>>;
+  readonly counters: readonly CounterSign[];
+  /** The cycle, each beating the next: dash › hook › whirl › dash. */
+  readonly triangle: readonly string[];
+  /** Hit name (hits.json) → the glyph of the move that won it. */
+  readonly hitGlyphs: Readonly<Record<string, string>>;
+  readonly dishTells: { readonly glyphSizeRatio: number; readonly glyphDistanceRatio: number; readonly glyphWidth: number; readonly glyphAlpha: number };
+}
+
 export interface MovesData {
   readonly moveFlow: FsmDefinition;
   readonly moveTable: readonly MoveRule[];
+  readonly moveGlyphs: MoveGlyphsData;
   readonly moveTuning: {
     /** Name of the per-Rig move FSM (other domains watch its StateEntered messages). */
     readonly fsm: string;

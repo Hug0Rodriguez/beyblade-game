@@ -1,4 +1,4 @@
-import { Text, type TextStyleFontWeight } from 'pixi.js';
+import { Graphics, GraphicsPath, Matrix, Text, type TextStyleFontWeight } from 'pixi.js';
 import { FrameRendered } from '@engine/messaging/engineMessages';
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
 import { GearChanged, RigBodiesMoved } from '../../../messages/brawlMessages';
@@ -8,6 +8,8 @@ import type { ViewContext } from '../../../shared/domainContext';
 
 interface Callout {
   readonly text: Text;
+  /** The winning move's glyph beside a won read (moveGlyphs.hitGlyphs). */
+  readonly glyph: Graphics;
   age: number;
   life: number;
   size: number;
@@ -30,12 +32,15 @@ export function calloutsViewHandlers(ctx: ViewContext): HandlerDef[] {
     });
     label.anchor.set(0.5);
     label.visible = false;
-    calloutLayer.addChild(label);
-    callouts.push({ text: label, age: 0, life: 0, size: 1 });
+    const glyph = new Graphics();
+    glyph.visible = false;
+    calloutLayer.addChild(label, glyph);
+    callouts.push({ text: label, glyph, age: 0, life: 0, size: 1 });
   }
   let nextCallout = 0;
+  const glyphPaths = new Map<string, GraphicsPath>();
 
-  const spawnCallout = (rigId: number, label: string, color: string, size = 1) => {
+  const spawnCallout = (rigId: number, label: string, color: string, size = 1, glyphName?: string) => {
     const at = rigPositions.get(rigId);
     if (!at || !label) return;
     const callout = callouts[nextCallout];
@@ -44,6 +49,16 @@ export function calloutsViewHandlers(ctx: ViewContext): HandlerDef[] {
     callout.text.style.fill = color;
     callout.text.position.set(at.x, at.y - at.z * ctx.data.brawl.brawlFx.height.liftPerUnit - hud.callout.offsetY);
     callout.text.visible = true;
+    const glyph = glyphName ? ctx.data.moves.moveGlyphs.glyphs[glyphName] : undefined;
+    callout.glyph.clear();
+    callout.glyph.visible = glyph !== undefined;
+    if (glyph) {
+      let parsed = glyphPaths.get(glyph.path);
+      if (!parsed) glyphPaths.set(glyph.path, (parsed = new GraphicsPath(glyph.path)));
+      const glyphSize = hud.callout.fontSize * 1.3;
+      callout.glyph.path(parsed.transform(new Matrix().translate(-12, -12).scale(glyphSize / 24, glyphSize / 24))).stroke({ color: glyph.color, width: 2.5, join: 'round', cap: 'round' });
+      callout.glyph.position.set(callout.text.x - callout.text.width / 2 - glyphSize * 0.8, callout.text.y);
+    }
     callout.age = 0;
     callout.life = hud.callout.seconds;
     callout.size = size;
@@ -69,7 +84,7 @@ export function calloutsViewHandlers(ctx: ViewContext): HandlerDef[] {
         if (look.spendReasons.includes(reason)) spawnCallout(batch.cols.rigId[i], label, look.spendColor, look.bigScale);
         else if (batch.cols.amount[i] < 0) spawnCallout(batch.cols.rigId[i], label, look.lossColor);
         else if (batch.cols.stale[i] === 1) spawnCallout(batch.cols.rigId[i], `${label} · ${labels.stale ?? ''}`, look.staleColor);
-        else if (look.bigHits.includes(reason)) spawnCallout(batch.cols.rigId[i], label, look.bigColor, look.bigScale);
+        else if (look.bigHits.includes(reason)) spawnCallout(batch.cols.rigId[i], label, look.bigColor, look.bigScale, ctx.data.moves.moveGlyphs.hitGlyphs[reason]);
         else spawnCallout(batch.cols.rigId[i], label, look.gainColor);
       }
     }),
@@ -90,7 +105,7 @@ export function calloutsViewHandlers(ctx: ViewContext): HandlerDef[] {
       }
     }),
     on(RoundStarted, 'style.callouts.onRoundStarted', () => {
-      for (const callout of callouts) callout.text.visible = false;
+      for (const callout of callouts) callout.text.visible = callout.glyph.visible = false;
     }),
     on(RigBodiesMoved, 'style.callouts.trackBodies', (batch) => {
       for (let i = 0; i < batch.count; i++) {
@@ -105,7 +120,10 @@ export function calloutsViewHandlers(ctx: ViewContext): HandlerDef[] {
         callout.text.y -= hud.callout.riseSpeed * dt;
         callout.text.alpha = Math.max(0, 1 - callout.age / callout.life);
         callout.text.scale.set(callout.size * (1 + Math.max(0, 0.25 - callout.age) * 2));
-        if (callout.age >= callout.life) callout.text.visible = false;
+        callout.glyph.y = callout.text.y;
+        callout.glyph.alpha = callout.text.alpha;
+        callout.glyph.scale.set(callout.text.scale.x);
+        if (callout.age >= callout.life) callout.text.visible = callout.glyph.visible = false;
       }
     }),
   ];

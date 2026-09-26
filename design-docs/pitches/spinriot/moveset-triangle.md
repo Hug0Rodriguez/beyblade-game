@@ -272,6 +272,21 @@ Hodent's signs model (GB 4851–4945): informative signs show state, inviting si
 | ✅ Redline | Red Spin bar labelled REDLINE | — | **REDLINE** callout on entering it | — |
 | ✅ Shatter gate | A marker at 65% on the rival's Spin bar | The pulsing SHATTER prompt and button | SHATTER | A 2-Rank drop on a whiff |
 
+### 8.1 Visual language: one shape per move, everywhere (2026-09-25)
+
+Playtest note: the attacks did not telegraph what beats what; the player spammed and could not remember the triangle. The book's answer is form that follows function (GB 5171–5208), colour *and* symbol together (GB 5608–5619), recognition instead of recall (GB 4744–4752, 2110–2120), and an inviting sign that removes tutorial text (GB 4889–4899, 4939–4943). Every move now owns one silhouette and one colour, defined once in `data/game/moves/moveGlyphs.json` and drawn in four places: on the Rig in the dish (Pixi, `rigViews.ts`), on the touch button, in the HUD triangle, and beside the outcome callout.
+
+| Move | Shape (why) | Colour | In the dish | On the button / HUD | Inviting sign |
+|---|---|---|---|---|---|
+| ✅ DASH (strike) | **Spearhead arrow**: "thrust that way" | cyan `#36d6ff` | The arrow sits in front of the Rig along the aim during rev-up **and** the dash; it turns with a drag-aim | Arrow glyph over the word | When the rival's spearhead shows, the **WHIRL** button lights in cyan with a small spearhead in its corner |
+| ✅ WHIRL (guard) | **Shield**: "I'm braced, hit me and bounce" | orange `#ff9d3c` | The reach ring plus a shield over the Rig while braced | Shield glyph | The rival's shield lights **HOOK** |
+| ✅ HOOK (grab) | **Hook / claw**: "I pull you" | violet `#b28cff` | The claw in front of the Rig on the reach arc; it turns with a drag-aim | Hook glyph | The rival's hook lights **DASH** |
+| ✅ DIVE (slam) | **Down-arrow onto a line**: "I come down on you" | lime `#b6ff5c` | The landing marker carries the glyph | The JUMP button's chevrons; the triangle's DIVE node | A **vulnerable** rival (stun stars and recovery shimmer are now lime, the DIVE colour) lights **JUMP** |
+| ✅ Triangle HUD | Three glyphs in a ring with arrows DASH › HOOK › WHIRL › DASH, DIVE underneath, key letters on keyboard | — | — | Under the human's panel | The rival's current move node lights; the arrow to its answer pulses |
+| ✅ Outcome | COUNTER! / INTERRUPT! / SLING! / PUNISH! carry the winning shape | — | Beside the callout | — | Each loss shows which shape beat you |
+
+Colour rules (GB 5029–5068, 5285): one colour means one thing. VOLT's body left cyan for DASH (`#4f7cff`), the top Gear is white-hot instead of Shatter pink, hit sparks dropped WHIRL orange, and "vulnerable" (recovery, stun) is lime because lime is the DIVE button.
+
 ---
 
 ## 9. Starting numbers (tune live with `` ` ``) ✅ all live in `data/game/**`

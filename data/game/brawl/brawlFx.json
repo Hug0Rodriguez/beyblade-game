@@ -11,8 +11,7 @@
     "drag": 3.2,
     "colors": [
       "#ffffff",
-      "#ffe14a",
-      "#ff9d3c"
+      "#ffe14a"
     ]
   },
   "bumpSparks": {
@@ -268,7 +267,7 @@
         "whirlRecover",
         "hookRecover"
       ],
-      "color": "#ff5c7a",
+      "color": "#b6ff5c",
       "alpha": 0.45,
       "pulsePerSecond": 10
     },
@@ -277,7 +276,7 @@
         "stunned",
         "launched"
       ],
-      "color": "#ffe14a",
+      "color": "#b6ff5c",
       "alpha": 0.7,
       "starCount": 3,
       "orbitPerSecond": 6

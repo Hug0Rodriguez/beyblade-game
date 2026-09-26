@@ -1,4 +1,4 @@
-import { Container, Graphics, Text, type TextStyleFontWeight } from 'pixi.js';
+import { Container, Graphics, GraphicsPath, Matrix, Text, type TextStyleFontWeight } from 'pixi.js';
 import { FrameRendered, StateEntered } from '@engine/messaging/engineMessages';
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
 import { createParticleEmitter } from '@engine/render/particles/particleEmitter';
@@ -78,20 +78,35 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
 
   const screenY = (y: number, z: number) => y - z * fx().height.liftPerUnit;
 
+  /** Move glyphs (moveGlyphs.json): parsed once; drawn scaled to the Rig, turned along the aim. */
+  const glyphPaths = new Map<string, GraphicsPath>();
+  const glyphOf = (move: string) => Object.values(ctx.data.moves.moveGlyphs.glyphs).find((glyph) => glyph.moves.includes(move));
+  const drawGlyph = (g: Graphics, path: string, color: string, radius: number, x: number, y: number, rotation: number) => {
+    const look = ctx.data.moves.moveGlyphs.dishTells;
+    let parsed = glyphPaths.get(path);
+    if (!parsed) glyphPaths.set(path, (parsed = new GraphicsPath(path)));
+    const size = radius * look.glyphSizeRatio;
+    const matrix = new Matrix().translate(-12, -12).scale(size / 24, size / 24).rotate(rotation).translate(x, y);
+    g.path(parsed.transform(matrix)).stroke({ color, width: look.glyphWidth, alpha: look.glyphAlpha, join: 'round', cap: 'round' });
+  };
+
   /** Draws this frame's tells for one Rig (local to its root, so they lift with it). */
   const drawTells = (view: RigView) => {
     const tells = fx().tells;
     const g = view.tell;
     g.clear();
     const aim = Math.atan2(view.aimY, view.aimX);
+    // The move's silhouette: strikes and grabs point along the aim in front of the Rig; the guard's shield sits over it.
+    const glyph = view.gone ? undefined : glyphOf(view.move);
+    if (glyph && glyph.role !== 'none' && glyph.role !== 'slam') {
+      const distance = view.radius * ctx.data.moves.moveGlyphs.dishTells.glyphDistanceRatio;
+      if (glyph.role === 'guard') drawGlyph(g, glyph.path, glyph.color, view.radius, 0, -distance, 0);
+      else drawGlyph(g, glyph.path, glyph.color, view.radius, Math.cos(aim) * distance, Math.sin(aim) * distance, aim + Math.PI / 2);
+    }
     if (tells.revUp.moves.includes(view.move)) {
       const on = Math.sin(clock * tells.revUp.flashPerSecond) > 0 ? 1 : 0.45;
       const tip = view.radius * tells.revUp.arrowLength;
-      const x = Math.cos(aim);
-      const y = Math.sin(aim);
-      g.moveTo(x * view.radius, y * view.radius).lineTo(x * tip, y * tip);
-      g.moveTo(x * tip, y * tip).lineTo(x * tip - Math.cos(aim - 0.5) * view.radius * 0.6, y * tip - Math.sin(aim - 0.5) * view.radius * 0.6);
-      g.moveTo(x * tip, y * tip).lineTo(x * tip - Math.cos(aim + 0.5) * view.radius * 0.6, y * tip - Math.sin(aim + 0.5) * view.radius * 0.6);
+      g.moveTo(Math.cos(aim) * view.radius, Math.sin(aim) * view.radius).lineTo(Math.cos(aim) * tip, Math.sin(aim) * tip);
       g.stroke({ color: tells.revUp.color, width: tells.revUp.width, alpha: tells.revUp.alpha * on });
       g.circle(0, 0, view.radius * 1.12).stroke({ color: tells.revUp.color, width: 2, alpha: tells.revUp.alpha * on });
     }
@@ -253,6 +268,8 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
           .moveTo(0, -radius * 1.6)
           .lineTo(0, radius * 1.6)
           .stroke({ color: markerLook.color, width: markerLook.width, alpha: markerLook.alpha });
+        const diveGlyph = ctx.data.moves.moveGlyphs.glyphs.dive;
+        if (diveGlyph) drawGlyph(marker, diveGlyph.path, diveGlyph.color, radius, 0, 0, 0);
         marker.visible = false;
         shadows.addChild(shadow, marker);
         rigs.addChild(root);

@@ -13,7 +13,8 @@
     "spinner.view.onPointerKind",
     "screens.title.onPointerKind",
     "screens.brawl.onPointerKind",
-    "style.view.onPointerKind"
+    "style.view.onPointerKind",
+    "moves.view.onPointerKind"
   ],
   "//input": "Device input is delivered before StepTicked so a step always sees this frame's input.",
   "StepTicked": [
@@ -49,7 +50,8 @@
     "rig.view.onMoveState",
     "brawl.view.onFlowState",
     "screens.brawl.onFlowState",
-    "spinner.view.onMoveState"
+    "spinner.view.onMoveState",
+    "moves.view.onMoveState"
   ],
   "StateExited": [],
   "SpinnerAssigned": [
@@ -58,7 +60,8 @@
     "rig.view.hudOnSpinnerAssigned",
     "match.view.onSpinnerAssigned",
     "style.view.onSpinnerAssigned",
-    "spinner.view.onSpinnerAssigned"
+    "spinner.view.onSpinnerAssigned",
+    "moves.view.onSpinnerAssigned"
   ],
   "RigReady": [
     "dish.onRigReady",

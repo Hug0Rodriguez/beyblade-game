@@ -216,3 +216,62 @@
   font-size: var(--result-title-size);
   color: var(--panel-text);
 }
+
+/* The triangle: what beats what, lit by the rival's current move. */
+.triangle-hud {
+  order: 3;
+  width: 120px;
+  margin-top: 4px;
+}
+.triangle-hud svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.tri-node path {
+  fill: none;
+  stroke: var(--glyph-color);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
+}
+.tri-halo {
+  fill: var(--glyph-color);
+  opacity: 0;
+}
+.tri-key {
+  font-size: 9px;
+  fill: var(--panel-detail);
+  text-anchor: middle;
+  opacity: 0.8;
+}
+.tri-arrow {
+  fill: none;
+  stroke: var(--panel-detail);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.35;
+  marker-end: none;
+}
+.tri-node.active path {
+  opacity: 1;
+  stroke-width: 3;
+}
+.tri-node.active .tri-halo {
+  opacity: 0.25;
+}
+.tri-node.answer path {
+  opacity: 1;
+  stroke-width: 3;
+  animation: gui-pulse 0.35s ease-in-out infinite alternate;
+}
+.tri-node.answer .tri-halo {
+  opacity: 0.4;
+  animation: gui-pulse 0.35s ease-in-out infinite alternate;
+}
+.tri-arrow.answer {
+  opacity: 1;
+  stroke: #ffffff;
+  stroke-width: 3;
+}
