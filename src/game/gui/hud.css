@@ -275,3 +275,24 @@
   stroke: #ffffff;
   stroke-width: 3;
 }
+
+/* Speaker toggle, top centre. */
+.mute-button {
+  position: absolute;
+  left: 50%;
+  top: var(--panel-margin);
+  transform: translateX(-50%);
+  appearance: none;
+  border: 0;
+  pointer-events: auto;
+  touch-action: manipulation;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--panel-back) 85%, transparent);
+  color: var(--panel-detail);
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  opacity: 0.8;
+}

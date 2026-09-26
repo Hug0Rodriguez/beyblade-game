@@ -1,4 +1,5 @@
 import type { RouteTableData } from '@engine/messaging/routeTable';
+import type { AudioData } from './schema/audioData';
 import type { BrawlData } from './schema/brawlData';
 import type { ConditionRow, FsmDefinition } from './schema/common';
 import type { DishData } from './schema/dishData';
@@ -67,4 +68,5 @@ export interface GameData {
   };
   readonly hud: { readonly hud: HudData };
   readonly screens: ScreenData;
+  readonly audio: { readonly sounds: AudioData };
 }

@@ -11,6 +11,7 @@ import { styleDomain } from '../domains/style';
 import { brawlScreen } from '../screens/brawl/brawlScreen';
 import { matchResultScreen } from '../screens/matchResult/matchResultScreen';
 import { titleScreen } from '../screens/title/titleScreen';
+import { audioView } from '../audio/audioView';
 
 /** Every module that takes part in the game. Order only affects view draw order (stage layering). */
 export const domainRegistry: readonly AnyDomainModule[] = [
@@ -26,4 +27,5 @@ export const domainRegistry: readonly AnyDomainModule[] = [
   titleScreen,
   brawlScreen,
   matchResultScreen,
+  audioView,
 ];

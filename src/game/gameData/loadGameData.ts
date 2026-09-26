@@ -56,6 +56,7 @@ export function loadGameData(source: JsonModules = modules): GameData {
     match: { matchRules: tree.get('match/matchRules.json') },
     hud: { hud: tree.get('hud/hud.json') },
     screens: { screens: tree.get('screens/screens.json'), copy: tree.get('screens/copy.json') },
+    audio: { sounds: tree.get('audio/sounds.json') },
   };
 }
 

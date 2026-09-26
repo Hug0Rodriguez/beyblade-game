@@ -101,7 +101,8 @@
     "style.callouts.onRoundStarted"
   ],
   "CountdownBeat": [
-    "round.view.onCountdownBeat"
+    "round.view.onCountdownBeat",
+    "audio.onCountdownBeat"
   ],
   "CountdownFinished": [
     "flow.gameFlow"
@@ -116,10 +117,12 @@
     "brawl.onMoveStarted",
     "brawl.view.onMoveStarted",
     "rig.view.onMoveStarted",
-    "style.onMoveStarted"
+    "style.onMoveStarted",
+    "audio.onMoveStarted"
   ],
   "MoveRefused": [
-    "rig.view.onMoveRefused"
+    "rig.view.onMoveRefused",
+    "audio.onMoveRefused"
   ],
   "RevCancelled": [
     "style.onRevCancelled"
@@ -154,7 +157,8 @@
     "moves.onHitLanded",
     "round.trackShatter",
     "rig.view.onHitLanded",
-    "brawl.view.onHitLanded"
+    "brawl.view.onHitLanded",
+    "audio.onHitLanded"
   ],
   "GearChanged": [
     "spinner.observeGear",
@@ -186,7 +190,8 @@
     "rig.view.onRevChanged",
     "spinner.observeRev",
     "spinner.view.onRevChanged",
-    "style.callouts.onRevChanged"
+    "style.callouts.onRevChanged",
+    "audio.onRevChanged"
   ],
   "RevGained": [
     "style.callouts.onRevGained"
@@ -199,7 +204,8 @@
     "moves.observeShatterReady",
     "spinner.observeShatterReady",
     "style.view.onShatterReady",
-    "spinner.view.onShatterReady"
+    "spinner.view.onShatterReady",
+    "audio.onShatterReady"
   ],
   "ShatterCharging": [
     "rig.view.onShatterCharging"
@@ -209,10 +215,12 @@
     "style.onRoundFinished",
     "rig.view.onRoundFinished",
     "brawl.view.onRoundFinished",
-    "round.view.onRoundFinished"
+    "round.view.onRoundFinished",
+    "audio.onRoundFinished"
   ],
   "PointsAwarded": [
-    "match.view.onPointsAwarded"
+    "match.view.onPointsAwarded",
+    "audio.onPointsAwarded"
   ],
   "RoundScored": [
     "flow.gameFlow"

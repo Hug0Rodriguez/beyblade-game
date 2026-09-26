@@ -285,6 +285,8 @@ Playtest note: the attacks did not telegraph what beats what; the player spammed
 | ✅ Triangle HUD | Three glyphs in a ring with arrows DASH › HOOK › WHIRL › DASH, DIVE underneath, key letters on keyboard | — | — | Under the human's panel | The rival's current move node lights; the arrow to its answer pulses |
 | ✅ Outcome | COUNTER! / INTERRUPT! / SLING! / PUNISH! carry the winning shape | — | Beside the callout | — | Each loss shows which shape beat you |
 
+Audio (GB 5110–5121): every move start has its own sound (rev-up whine, dash whoosh, whirl hum, hook snap), and hits get heavier with their shake, so the ear learns the tells too. Touch aim: holding DASH or HOOK and dragging steers the attack during its wind-up, and the glyph turns with it.
+
 Colour rules (GB 5029–5068, 5285): one colour means one thing. VOLT's body left cyan for DASH (`#4f7cff`), the top Gear is white-hot instead of Shatter pink, hit sparks dropped WHIRL orange, and "vulnerable" (recovery, stun) is lime because lime is the DIVE button.
 
 ---

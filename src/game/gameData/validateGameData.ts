@@ -85,6 +85,21 @@ export function validateGameData(data: GameData): void {
     v.requireRef(`moves/moveGlyphs.hitGlyphs.${hit}`, glyph, glyphNames);
   }
 
+  // Audio: every cue names a real move / hit and an existing recipe.
+  const sounds = data.audio.sounds;
+  const recipeNames = Object.keys(sounds.recipes);
+  for (const [move, recipe] of Object.entries(sounds.cues.moves)) {
+    v.requireRef('audio/sounds.cues.moves (move)', move, moves.moveFlow.states);
+    v.requireRef(`audio/sounds.cues.moves.${move}`, recipe, recipeNames);
+  }
+  for (const [hit, recipe] of Object.entries(sounds.cues.hits)) {
+    v.requireRef('audio/sounds.cues.hits (hit)', hit, Object.keys(brawl.hits));
+    v.requireRef(`audio/sounds.cues.hits.${hit}`, recipe, recipeNames);
+  }
+  for (const cue of ['countdownBeat', 'countdownGo', 'pointsAwarded', 'rankUp', 'shatterReady', 'refused', 'roundFinished'] as const) {
+    v.requireRef(`audio/sounds.cues.${cue}`, sounds.cues[cue], recipeNames);
+  }
+
   // Hits: every outcome names a hits.json row; hit events are moveFlow events.
   const hitNames = Object.keys(brawl.hits);
   brawl.hitOutcomes.forEach((row, i) => v.requireRef(`brawl/hitOutcomes[${i}].hit`, row.hit, hitNames));

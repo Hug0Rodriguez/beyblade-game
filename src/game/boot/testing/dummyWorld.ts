@@ -14,7 +14,7 @@ export type Mutable<T> = { -readonly [K in keyof T]: Mutable<T[K]> };
  * with the countdown over and the fight on. `edit` tweaks the data first.
  */
 export function dummyWorld(edit: (data: Mutable<GameData>) => void = () => {}, gap = 0.08): TestWorld {
-  const data = cloneGameData(loadGameData()) as Mutable<GameData>;
+  const data = cloneGameData(loadGameData()) as unknown as Mutable<GameData>;
   for (const command of Object.values(data.spinner.tacticCommands)) {
     command.steer = 'hold';
     command.press = [];

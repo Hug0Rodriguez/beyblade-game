@@ -1,0 +1,90 @@
+{
+  "master": { "gain": 0.8 },
+  "recipes": {
+    "revUp": [{ "kind": "tone", "wave": "sawtooth", "freqFrom": 180, "freqTo": 620, "seconds": 0.13, "gain": 0.18, "lowpassFrom": 1200, "lowpassTo": 2600 }],
+    "dash": [{ "kind": "noise", "seconds": 0.24, "gain": 0.45, "lowpassFrom": 5000, "lowpassTo": 500 }],
+    "whirl": [
+      { "kind": "tone", "wave": "triangle", "freqFrom": 90, "freqTo": 150, "seconds": 0.35, "gain": 0.35 },
+      { "kind": "noise", "seconds": 0.3, "gain": 0.2, "lowpassFrom": 2500, "lowpassTo": 900 }
+    ],
+    "reach": [{ "kind": "tone", "wave": "square", "freqFrom": 520, "freqTo": 300, "seconds": 0.09, "gain": 0.12, "lowpassFrom": 1800, "lowpassTo": 900 }],
+    "hook": [{ "kind": "noise", "seconds": 0.12, "gain": 0.4, "lowpassFrom": 3500, "lowpassTo": 700 }],
+    "pop": [{ "kind": "tone", "wave": "sine", "freqFrom": 280, "freqTo": 720, "seconds": 0.14, "gain": 0.3 }],
+    "dive": [{ "kind": "noise", "seconds": 0.28, "gain": 0.5, "lowpassFrom": 2200, "lowpassTo": 160 }],
+    "hit": [
+      { "kind": "tone", "wave": "sine", "freqFrom": 150, "freqTo": 45, "seconds": 0.17, "gain": 0.9 },
+      { "kind": "noise", "seconds": 0.09, "gain": 0.35, "lowpassFrom": 2400, "lowpassTo": 300 }
+    ],
+    "heavyHit": [
+      { "kind": "tone", "wave": "sine", "freqFrom": 110, "freqTo": 32, "seconds": 0.32, "gain": 1.0 },
+      { "kind": "noise", "seconds": 0.22, "gain": 0.6, "lowpassFrom": 1600, "lowpassTo": 150 }
+    ],
+    "counter": [
+      { "kind": "tone", "wave": "square", "freqFrom": 900, "freqTo": 1400, "seconds": 0.12, "gain": 0.22, "lowpassFrom": 3000, "lowpassTo": 4000 },
+      { "kind": "tone", "wave": "sine", "freqFrom": 120, "freqTo": 40, "seconds": 0.3, "gain": 0.9 }
+    ],
+    "clash": [
+      { "kind": "tone", "wave": "square", "freqFrom": 420, "freqTo": 200, "seconds": 0.08, "gain": 0.25, "lowpassFrom": 2500, "lowpassTo": 800 },
+      { "kind": "noise", "seconds": 0.06, "gain": 0.3, "lowpassFrom": 4000, "lowpassTo": 1000 }
+    ],
+    "wall": [
+      { "kind": "tone", "wave": "sine", "freqFrom": 90, "freqTo": 30, "seconds": 0.28, "gain": 0.9 },
+      { "kind": "noise", "seconds": 0.16, "gain": 0.5, "lowpassFrom": 1200, "lowpassTo": 120 }
+    ],
+    "shatter": [
+      { "kind": "noise", "seconds": 0.9, "gain": 0.9, "lowpassFrom": 6000, "lowpassTo": 80 },
+      { "kind": "tone", "wave": "sine", "freqFrom": 80, "freqTo": 20, "seconds": 0.8, "gain": 1.0 }
+    ],
+    "refused": [{ "kind": "tone", "wave": "square", "freqFrom": 220, "freqTo": 170, "seconds": 0.09, "gain": 0.12, "lowpassFrom": 900, "lowpassTo": 600 }],
+    "beat": [{ "kind": "tone", "wave": "sine", "freqFrom": 660, "freqTo": 640, "seconds": 0.12, "gain": 0.3 }],
+    "go": [{ "kind": "tone", "wave": "sine", "freqFrom": 880, "freqTo": 1320, "seconds": 0.3, "gain": 0.4 }],
+    "point": [{ "kind": "tone", "wave": "triangle", "freqFrom": 523, "freqTo": 784, "seconds": 0.35, "gain": 0.4 }],
+    "rankUp": [{ "kind": "tone", "wave": "triangle", "freqFrom": 440, "freqTo": 880, "seconds": 0.22, "gain": 0.3 }],
+    "shatterReady": [{ "kind": "tone", "wave": "sine", "freqFrom": 900, "freqTo": 1500, "seconds": 0.45, "gain": 0.3 }],
+    "finish": [
+      { "kind": "tone", "wave": "sawtooth", "freqFrom": 300, "freqTo": 90, "seconds": 0.55, "gain": 0.4, "lowpassFrom": 2000, "lowpassTo": 300 },
+      { "kind": "noise", "seconds": 0.4, "gain": 0.4, "lowpassFrom": 3000, "lowpassTo": 200 }
+    ]
+  },
+  "cues": {
+    "moves": {
+      "dashRevUp": "revUp",
+      "dash": "dash",
+      "airDash": "dash",
+      "whirl": "whirl",
+      "airWhirl": "whirl",
+      "hookReach": "reach",
+      "hook": "hook",
+      "airHook": "hook",
+      "pop": "pop",
+      "dive": "dive",
+      "shatter": "shatter",
+      "breakOut": "clash",
+      "revBreakOut": "clash"
+    },
+    "hits": {
+      "strike": "hit",
+      "airStrike": "hit",
+      "slam": "hit",
+      "sling": "hit",
+      "outOfTheAir": "heavyHit",
+      "punish": "heavyHit",
+      "spike": "heavyHit",
+      "deflect": "counter",
+      "interrupt": "counter",
+      "wallSplat": "wall",
+      "clash": "clash",
+      "grabSlip": "clash",
+      "shatter": "shatter"
+    },
+    "hitGainPerShake": 0.8,
+    "countdownBeat": "beat",
+    "countdownGo": "go",
+    "pointsAwarded": "point",
+    "rankUp": "rankUp",
+    "shatterReady": "shatterReady",
+    "refused": "refused",
+    "roundFinished": "finish"
+  },
+  "mute": { "key": "KeyM", "storageKey": "spinriot.muted", "label": "SOUND", "mutedLabel": "MUTED" }
+}

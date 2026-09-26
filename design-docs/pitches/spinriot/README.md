@@ -24,7 +24,7 @@
 | ✅ **Genre** | 1v1 style-action brawler with spinning tops |
 | **Feel** | Devil May Cry / Bayonetta combos and style rank · Sonic / Tony Hawk momentum · Rocket League physics hits |
 | ✅ **Session** | Rounds of 20–40 s · first to 4 points · Matches under 3 minutes *(measured: 27 s Rounds, 79 s Matches on average)* |
-| ◐ **Platforms** | Desktop (keyboard or gamepad) and mobile (touch, portrait **and** landscape layouts, home-screen install) *(keyboard ✅, touch ✅, landscape ✅, home-screen ✅, gamepad ☐)*. Live at **https://hug0rodriguez.github.io/beyblade-game/** |
+| ◐ **Platforms** | Desktop (keyboard or gamepad) and mobile (touch, portrait **and** landscape layouts, home-screen install, HTML GUI, drag-to-aim, sound) *(keyboard ✅, touch ✅, landscape ✅, home-screen ✅, sound ✅, gamepad ☐)*. Live at **https://hug0rodriguez.github.io/beyblade-game/** |
 | ✅ **Still tops underneath** | Spin is life, the arena is a bowl, collisions transfer energy, and Rounds end in ring-outs, bursts or spin-outs |
 
 Documents in this folder:
@@ -174,6 +174,8 @@ The game is deployed by GitHub Actions from `main` to **https://hug0rodriguez.gi
 - **The GUI is HTML/CSS** (`src/engine/gui/guiHost.ts`): screen layers marked `"space": "gui"` in `screens.json` are `<section>`s stacked over the Pixi canvas, laid out with CSS (`@media (orientation: …)`, container units, safe-area insets). The dish, Rigs, trails and in-dish tells stay in Pixi. Pixi's event system never handles `pointercancel`, which iOS fires freely (a second finger, an edge swipe), so the old canvas stick died after one cancelled touch. The DOM stick and buttons (`src/engine/input/touchWidgets/dom*.ts`) capture their pointer and release on up, cancel, lost capture, blur and page-hide.
 - **The action pad** (`data/game/spinner/human/touch.json`, `src/game/gui/touch.css`) is a grid that fills the gutter beside the dish in landscape, or the band under it in portrait: DASH is the tall primary slab nearest the thumb, WHIRL / HOOK / JUMP stack beside it, and SHATTER / REV appears on the top row when it applies. Holding DASH or HOOK and dragging aims the move during its wind-up (`TouchAimChanged`).
 - **Landscape or portrait**, both work. The Pixi title / result screens still read a `landscape` override from `hud.json` until they move to HTML too.
+- **Aim by dragging**: press DASH or HOOK and drag your thumb during the wind-up to steer the attack (`TouchAimChanged` → `SpinnerCommandIssued.aimX/aimY`); a tap fires along the stick as before. The Rig's glyph turns with the drag so the rival can read it.
+- **Sound for weight** (`data/game/audio/sounds.json`, `src/engine/audio/synth.ts`): procedural Web Audio, no files. Every move start, every hit (louder with its shake), the countdown, points, Rank-ups, the Shatter prompt and refused presses have a cue. SOUND / MUTED toggle at the top of the HUD, or **M**; remembered per device.
 - **Diagnostics on a phone**: add `?debug=1` to the URL for a readout of frame rate, renderer, size, the last pointer event and cancelled-touch count.
 - **Safe area**: the canvas is inset by the notch and home-indicator insets (`#game` in `index.html`), so the HUD and buttons never hide under them.
 - **Fullscreen**: on Android the first tap on the canvas requests fullscreen (`data/engine/runtime.json` → `fullscreenOnTouch`). iPhone Safari has no fullscreen API; use **Share → Add to Home Screen** instead, which launches SPINRIOT without browser bars (`public/manifest.webmanifest`).
