@@ -6,6 +6,8 @@ export interface EngineConfig {
     readonly maxStepsPerFrame: number;
     readonly maxFrameSeconds: number;
     readonly maxResolution: number;
+    /** Request fullscreen on the first touch tap (Android; iPhone Safari has no such API). */
+    readonly fullscreenOnTouch: boolean;
   };
   readonly messaging: { readonly maxDrainPasses: number; readonly defaultQueueCapacity: number };
   readonly dev: {

@@ -75,28 +75,38 @@ export interface HudData {
     /** Size multiplier for a won read's callout. */
     readonly bigScale: number;
   };
-  readonly shatterPrompt: { readonly fontSize: number; readonly color: string; readonly yRatio: number; readonly pulsePerSecond: number };
-  readonly screenLayout: {
-    readonly titleSize: number;
-    readonly titleYRatio: number;
-    readonly taglineSize: number;
-    readonly taglineYRatio: number;
-    readonly promptSize: number;
-    readonly promptYRatio: number;
-    readonly controlsSize: number;
-    readonly controlsYRatio: number;
-    readonly startButtonYRatio: number;
-    readonly titleColor: string;
-    readonly taglineColor: string;
-    readonly promptColor: string;
-    readonly resultTitleSize: number;
-    readonly resultTitleYRatio: number;
-    readonly resultButtonsYRatio: number;
-    readonly buttonGap: number;
-    readonly backdropColor: string;
-    readonly backdropAlpha: number;
-    readonly promptPulsePerSecond: number;
-  };
+  readonly shatterPrompt: ShatterPromptLayout & { readonly landscape?: Partial<ShatterPromptLayout> };
+  /** Title / Match Result layout. `landscape` overrides the fields that differ on a wide, short screen. */
+  readonly screenLayout: ScreenLayout & { readonly landscape?: Partial<ScreenLayout> };
+}
+
+export interface ShatterPromptLayout {
+  readonly fontSize: number;
+  readonly color: string;
+  readonly yRatio: number;
+  readonly pulsePerSecond: number;
+}
+
+export interface ScreenLayout {
+  readonly titleSize: number;
+  readonly titleYRatio: number;
+  readonly taglineSize: number;
+  readonly taglineYRatio: number;
+  readonly promptSize: number;
+  readonly promptYRatio: number;
+  readonly controlsSize: number;
+  readonly controlsYRatio: number;
+  readonly startButtonYRatio: number;
+  readonly titleColor: string;
+  readonly taglineColor: string;
+  readonly promptColor: string;
+  readonly resultTitleSize: number;
+  readonly resultTitleYRatio: number;
+  readonly resultButtonsYRatio: number;
+  readonly buttonGap: number;
+  readonly backdropColor: string;
+  readonly backdropAlpha: number;
+  readonly promptPulsePerSecond: number;
 }
 
 export interface ScreenData {

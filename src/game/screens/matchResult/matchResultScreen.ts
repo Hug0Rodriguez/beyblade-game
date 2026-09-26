@@ -1,5 +1,6 @@
 import { Container, Graphics } from 'pixi.js';
 import { ViewportResized } from '@engine/messaging/engineMessages';
+import { orientationOf, withOrientation } from '@engine/screens/orientation';
 import { on } from '@engine/messaging/handlerRegistry';
 import { createMenuButton } from '@engine/ui/menuButton';
 import { RematchRequested, TitleRequested } from '../../messages/flowMessages';
@@ -34,6 +35,7 @@ export const matchResultScreen: DomainModule<null> = {
       on(ViewportResized, 'screens.matchResult.layout', (batch) => {
         const width = batch.cols.width[batch.count - 1];
         const height = batch.cols.height[batch.count - 1];
+        const layout = withOrientation(hud.screenLayout, orientationOf(width, height));
         backdrop.clear().rect(0, 0, width, height).fill({ color: layout.backdropColor, alpha: layout.backdropAlpha });
         winner.style.wordWrapWidth = width - 32;
         winner.position.set(width / 2, height * layout.resultTitleYRatio);

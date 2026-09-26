@@ -24,7 +24,7 @@
 | ✅ **Genre** | 1v1 style-action brawler with spinning tops |
 | **Feel** | Devil May Cry / Bayonetta combos and style rank · Sonic / Tony Hawk momentum · Rocket League physics hits |
 | ✅ **Session** | Rounds of 20–40 s · first to 4 points · Matches under 3 minutes *(measured: 27 s Rounds, 79 s Matches on average)* |
-| ◐ **Platforms** | Desktop (keyboard or gamepad) and mobile (touch) *(keyboard ✅, touch ✅, gamepad ☐)* |
+| ◐ **Platforms** | Desktop (keyboard or gamepad) and mobile (touch, portrait **and** landscape layouts, home-screen install) *(keyboard ✅, touch ✅, landscape ✅, home-screen ✅, gamepad ☐)*. Live at **https://hug0rodriguez.github.io/beyblade-game/** |
 | ✅ **Still tops underneath** | Spin is life, the arena is a bowl, collisions transfer energy, and Rounds end in ring-outs, bursts or spin-outs |
 
 Documents in this folder:
@@ -88,7 +88,7 @@ The same three buttons do different things depending on **where you are**: on th
 
 **Bindings**
 - Desktop: WASD or arrows, plus **J** (Dash), **K** (Pop), **L** (Whirl), or a gamepad.
-- Mobile: floating joystick on the left and three buttons on the right. The Shatter prompt pulses when it's available.
+- Mobile: floating joystick on the left, four buttons (DASH · WHIRL · HOOK · JUMP) on the right, plus the SHATTER / REV chord button when it applies. The Shatter prompt pulses when it's available. **Each orientation has its own layout** (`data/game/spinner/human/touch.json`, `landscape` block): in portrait the buttons sit under the dish; in landscape the dish fills the height and the stick and buttons live in the gutters beside it, so nothing covers the play area.
 
 ### Sample chains
 These are skill-toy "tricks", each of which gets a callout.
@@ -168,8 +168,15 @@ Steve Swink (*Game Feel*) defines game feel as *real-time control of virtual obj
 
 ---
 
+## Play it on a phone
+The game is deployed by GitHub Actions from `main` to **https://hug0rodriguez.github.io/beyblade-game/** (`.github/workflows/deploy.yml`).
+
+- **Landscape or portrait**, both work; every layout block in the data (`touch.json`, `hud.json` → `screenLayout`, `shatterPrompt`) may carry a `landscape` sub-object that overrides only the fields that differ. `src/engine/screens/orientation.ts` picks it from the `ViewportResized` size.
+- **Safe area**: the canvas is inset by the notch and home-indicator insets (`#game` in `index.html`), so the HUD and buttons never hide under them.
+- **Fullscreen**: on Android the first tap on the canvas requests fullscreen (`data/engine/runtime.json` → `fullscreenOnTouch`). iPhone Safari has no fullscreen API; use **Share → Add to Home Screen** instead, which launches SPINRIOT without browser bars (`public/manifest.webmanifest`).
+
 ## Implementation checklist: what's left
-Checked against the code on 2026-09-24. Everything else in this pitch is ✅, or has been superseded by [moveset-triangle.md](moveset-triangle.md), which has its own checklist (§11).
+Checked against the code on 2026-09-25. Everything else in this pitch is ✅, or has been superseded by [moveset-triangle.md](moveset-triangle.md), which has its own checklist (§11).
 
 - [ ] ☐ **Gamepad** support (analog stick and buttons)
 - [ ] ☐ **Grazes**: Rev for near misses at high Speed

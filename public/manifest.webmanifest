@@ -1,0 +1,15 @@
+{
+  "name": "SPINRIOT",
+  "short_name": "SPINRIOT",
+  "description": "Style is how you kill. A 1v1 style-and-flow brawler built on spinning tops.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#08060f",
+  "theme_color": "#08060f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

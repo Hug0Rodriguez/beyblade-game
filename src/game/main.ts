@@ -7,6 +7,7 @@ import { createTimeScale } from '@engine/runtime/timeScale';
 import { createScreenHost } from '@engine/screens/screenHost';
 import { attachKeyboardDevice } from '@engine/input/devices/keyboardDevice';
 import { attachPointerDevice } from '@engine/input/devices/pointerDevice';
+import { attachFullscreenOnTouch } from '@engine/runtime/fullscreen';
 import { createMessageLog } from '@engine/dev/messageLog';
 import { createTableInspector } from '@engine/dev/tableInspector';
 import { createTuningPanel } from '@engine/dev/tuningPanel';
@@ -59,6 +60,7 @@ async function main(): Promise<void> {
 
   attachKeyboardDevice(bus, watchedKeyCodes(data));
   attachPointerDevice(bus, app.canvas);
+  if (engine.runtime.fullscreenOnTouch) attachFullscreenOnTouch(app.canvas);
   if (dev) {
     bus.observe(createMessageLog(engine.dev.messageLogKey, engine.dev.messageLogQuiet));
     void createTuningPanel(data as unknown as Record<string, unknown>, {

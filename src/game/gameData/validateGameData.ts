@@ -40,6 +40,12 @@ export function validateGameData(data: GameData): void {
     if (command.combo) v.requireRef(`spinner/cpu/tacticCommands.${state}.combo`, command.combo, ids(spinner.cpuCombos));
   }
 
+  // Touch: the landscape layout only repositions buttons that exist.
+  const touchWidgets = spinner.touch.buttons.map((button) => button.widget);
+  for (const widget of Object.keys(spinner.touch.landscape?.buttons ?? {})) {
+    v.requireRef('spinner/human/touch.landscape.buttons', widget, touchWidgets);
+  }
+
   // Moves: every move in the table is a moveFlow state with tuning.
   const moveNames = Object.keys(moves.moveTuning.moves);
   for (const row of moves.moveTable) {

@@ -1,5 +1,6 @@
 import { Container, Graphics, Text, type TextStyleFontWeight } from 'pixi.js';
 import { FrameRendered, PointerKindDetected, ViewportResized } from '@engine/messaging/engineMessages';
+import { orientationOf, withOrientation } from '@engine/screens/orientation';
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
 import { createGauge, type Gauge } from '@engine/ui/gauge';
 import { GearChanged, RigBodiesMoved } from '../../../messages/brawlMessages';
@@ -198,7 +199,9 @@ export function revHudHandlers(ctx: ViewContext): HandlerDef[] {
     }),
     on(ViewportResized, 'style.view.layout', (batch) => {
       screenWidth = batch.cols.width[batch.count - 1];
-      prompt.position.set(screenWidth / 2, batch.cols.height[batch.count - 1] * hud.shatterPrompt.yRatio);
+      const screenHeight = batch.cols.height[batch.count - 1];
+      const promptLayout = withOrientation(hud.shatterPrompt, orientationOf(screenWidth, screenHeight));
+      prompt.position.set(screenWidth / 2, screenHeight * promptLayout.yRatio);
       layout();
     }),
     on(FrameRendered, 'style.view.animate', (batch) => {

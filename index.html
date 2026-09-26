@@ -8,6 +8,12 @@
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SPINRIOT" />
+    <meta name="theme-color" content="#08060f" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>SPINRIOT</title>
     <style>
       html,
@@ -23,9 +29,11 @@
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
       }
+      /* The canvas fills the safe area: the notch and home indicator never cover the HUD or buttons. */
       #game {
         position: fixed;
-        inset: 0;
+        inset: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px)
+          env(safe-area-inset-left, 0px);
       }
       #game canvas {
         display: block;

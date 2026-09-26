@@ -73,5 +73,46 @@
     "pressedAlpha": 0.95,
     "labelColor": "#0b0d17",
     "fontSize": 13
+  },
+  "landscape": {
+    "joystick": {
+      "zone": {
+        "x": 0,
+        "y": 0.2,
+        "width": 0.4,
+        "height": 0.8
+      },
+      "rest": {
+        "x": 0.13,
+        "y": 0.62
+      }
+    },
+    "buttons": {
+      "whirl": {
+        "x": 0.89,
+        "y": 0.46,
+        "radius": 30
+      },
+      "hook": {
+        "x": 0.825,
+        "y": 0.58,
+        "radius": 30
+      },
+      "dash": {
+        "x": 0.955,
+        "y": 0.58,
+        "radius": 30
+      },
+      "pop": {
+        "x": 0.89,
+        "y": 0.7,
+        "radius": 28
+      },
+      "shatter": {
+        "x": 0.89,
+        "y": 0.9,
+        "radius": 34
+      }
+    }
   }
 }

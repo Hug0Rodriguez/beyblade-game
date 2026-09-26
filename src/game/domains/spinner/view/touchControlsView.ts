@@ -3,6 +3,7 @@ import { PointerKindDetected, StateEntered, ViewportResized } from '@engine/mess
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
 import { createTouchButton } from '@engine/input/touchWidgets/touchButton';
 import { createVirtualJoystick } from '@engine/input/touchWidgets/virtualJoystick';
+import { orientationOf } from '@engine/screens/orientation';
 import { SpinnerAssigned } from '../../../messages/spinnerMessages';
 import { RevChanged, ShatterReady } from '../../../messages/styleMessages';
 import type { ViewContext } from '../../../shared/domainContext';
@@ -76,13 +77,21 @@ export function touchControlsViewHandlers(ctx: ViewContext): HandlerDef[] {
     on(PointerKindDetected, 'spinner.view.onPointerKind', (batch) => {
       if (batch.count > 0 && batch.cols.touch[batch.count - 1] === 1) controls.visible = true;
     }),
+    // Portrait positions are the data as authored; landscape moves the stick and buttons into the
+    // gutters beside the dish (the dish fills the height there).
     on(ViewportResized, 'spinner.view.layout', (batch) => {
       const width = batch.cols.width[batch.count - 1];
       const height = batch.cols.height[batch.count - 1];
-      const { zone, rest } = touch.joystick;
+      const landscape = orientationOf(width, height) === 'landscape' ? touch.landscape : undefined;
+      const zone = landscape?.joystick?.zone ?? touch.joystick.zone;
+      const rest = landscape?.joystick?.rest ?? touch.joystick.rest;
       joystick.setZone(zone.x * width, zone.y * height, zone.width * width, zone.height * height);
       joystick.setRestPosition(rest.x * width, rest.y * height);
-      for (const { spec, button } of buttons) button.view.position.set(spec.x * width, spec.y * height);
+      for (const { spec, button } of buttons) {
+        const at = landscape?.buttons?.[spec.widget];
+        button.view.position.set((at ?? spec).x * width, (at ?? spec).y * height);
+        button.view.scale.set((at?.radius ?? spec.radius) / spec.radius);
+      }
     }),
   ];
 }

@@ -4,6 +4,8 @@ import { defineConfig } from 'vitest/config';
 const fromRoot = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export default defineConfig({
+  // Relative asset URLs: the same build works at the root locally and under /<repo>/ on GitHub Pages.
+  base: './',
   resolve: {
     alias: {
       '@shared': fromRoot('./src/shared'),

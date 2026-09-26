@@ -2,5 +2,6 @@
   "fixedStepHz": 120,
   "maxStepsPerFrame": 8,
   "maxFrameSeconds": 0.1,
-  "maxResolution": 2
+  "maxResolution": 2,
+  "fullscreenOnTouch": true
 }

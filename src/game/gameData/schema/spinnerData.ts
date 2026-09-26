@@ -69,6 +69,19 @@ export interface CpuCombo {
   readonly steps: readonly { readonly at: number; readonly press: ButtonName }[];
 }
 
+/** A point in screen fractions (0..1 of width / height). */
+export interface ScreenPoint {
+  readonly x: number;
+  readonly y: number;
+}
+
+/** Landscape overrides for the touch layout: only the positions that differ from portrait. */
+export interface TouchLandscapeLayout {
+  readonly joystick?: { readonly zone?: JoystickData['zone']; readonly rest?: JoystickData['rest'] };
+  /** Button widget → position, and a smaller radius where the gutter is narrow. */
+  readonly buttons?: Readonly<Record<string, ScreenPoint & { readonly radius?: number }>>;
+}
+
 export interface SpinnerData {
   readonly spinners: readonly SpinnerEntry[];
   readonly keyboard: { readonly bindings: Readonly<Record<HumanCommandName, readonly string[]>> };
@@ -76,6 +89,7 @@ export interface SpinnerData {
     readonly joystick: JoystickData;
     readonly buttons: readonly TouchButtonData[];
     readonly buttonStyle: { readonly alpha: number; readonly pressedAlpha: number; readonly labelColor: string; readonly fontSize: number };
+    readonly landscape?: TouchLandscapeLayout;
   };
   readonly cpuProfiles: readonly CpuProfile[];
   readonly cpuTactics: FsmDefinition;

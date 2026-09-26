@@ -1,5 +1,6 @@
 import { Container } from 'pixi.js';
 import { FrameRendered, PointerKindDetected, ViewportResized } from '@engine/messaging/engineMessages';
+import { orientationOf, withOrientation } from '@engine/screens/orientation';
 import { on } from '@engine/messaging/handlerRegistry';
 import { createMenuButton } from '@engine/ui/menuButton';
 import { StartRequested } from '../../messages/flowMessages';
@@ -34,6 +35,7 @@ export const titleScreen: DomainModule<null> = {
       on(ViewportResized, 'screens.title.layout', (batch) => {
         const width = batch.cols.width[batch.count - 1];
         const height = batch.cols.height[batch.count - 1];
+        const layout = withOrientation(hud.screenLayout, orientationOf(width, height));
         title.scale.set(Math.min(1, (width - 32) / title.width));
         for (const text of [tagline, prompt, controls]) text.style.wordWrapWidth = width - 32;
         title.position.set(width / 2, height * layout.titleYRatio);
