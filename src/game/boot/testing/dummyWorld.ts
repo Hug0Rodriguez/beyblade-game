@@ -51,7 +51,7 @@ export function movesOf(world: TestWorld, rig: number): string[] {
 
 /** Makes the dummy rival (Spinner 1) press a button this step, as if its CPU chose to. */
 export function rivalPress(world: TestWorld, button: ButtonName, steerX = 0, steerY = 0): void {
-  world.publish(SpinnerCommandIssued, { spinnerId: 1, steerX, steerY, dash: 0, pop: 0, whirl: 0, hook: 0, [button]: 1 });
+  world.publish(SpinnerCommandIssued, { spinnerId: 1, steerX, steerY, aimX: 0, aimY: 0, dash: 0, pop: 0, whirl: 0, hook: 0, [button]: 1 });
   world.step();
 }
 

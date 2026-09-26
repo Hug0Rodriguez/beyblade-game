@@ -7,8 +7,10 @@ import { GearChanged, HitLanded, Landed, RigBodiesMoved } from '../../../message
 import { MoveRefused, MoveStarted } from '../../../messages/moveMessages';
 import { RigReady, RigSpinChanged } from '../../../messages/rigMessages';
 import { RoundFinished, RoundStarted } from '../../../messages/roundMessages';
+import { SpinnerCommandIssued } from '../../../messages/spinnerMessages';
 import { RevChanged, ShatterCharging } from '../../../messages/styleMessages';
 import type { ViewContext } from '../../../shared/domainContext';
+import { rigOfSpinner } from '../../../shared/ids';
 import { drawRig } from './drawRig';
 
 interface RigView {
@@ -234,6 +236,15 @@ export function rigViewHandlers(ctx: ViewContext): HandlerDef[] {
   };
 
   return [
+    // A dragged attack button aims live: the glyph turns with the finger during the wind-up.
+    on(SpinnerCommandIssued, 'rig.view.onCommandAim', (batch) => {
+      for (let i = 0; i < batch.count; i++) {
+        const view = views.get(rigOfSpinner(batch.cols.spinnerId[i]));
+        if (!view || (batch.cols.aimX[i] === 0 && batch.cols.aimY[i] === 0)) continue;
+        view.aimX = batch.cols.aimX[i];
+        view.aimY = batch.cols.aimY[i];
+      }
+    }),
     on(RigReady, 'rig.view.onRigReady', (batch) => {
       for (let i = 0; i < batch.count; i++) {
         const rigId = batch.cols.rigId[i];

@@ -98,6 +98,8 @@ export function cpuHandlers(state: SpinnerState, ctx: DomainContext): HandlerDef
         }
         runCombo(row, dt);
         ctx.publish(SpinnerCommandIssued, {
+          aimX: 0,
+          aimY: 0,
           spinnerId: state.cpus.ids[row],
           steerX: c.steerX[row],
           steerY: c.steerY[row],

@@ -109,8 +109,15 @@ export function moveHandlers(state: MovesState, ctx: DomainContext): HandlerDef[
       // or a Rev Cancel while recovering or stunned.
       const row = rowOf(state.rigs, rigId);
       const m = state.rigs.cols;
-      m.aimX[row] = batch.cols.steerX[i];
-      m.aimY[row] = batch.cols.steerY[i];
+      // An explicit aim (a dragged button) wins over the steer, and re-aims a move that snapshots
+      // its direction at the press (the Hook), so dragging during the wind-up still lands.
+      const aimed = length(batch.cols.aimX[i], batch.cols.aimY[i]) > 0;
+      m.aimX[row] = aimed ? batch.cols.aimX[i] : batch.cols.steerX[i];
+      m.aimY[row] = aimed ? batch.cols.aimY[i] : batch.cols.steerY[i];
+      if (aimed) {
+        m.pressAimX[row] = batch.cols.aimX[i];
+        m.pressAimY[row] = batch.cols.aimY[i];
+      }
       if (pressed.dash === 1) m.dashPressedAt[row] = state.clock;
       if (pressed.whirl === 1) m.whirlPressedAt[row] = state.clock;
       const window = tuning().comboWindowSeconds ?? 0;

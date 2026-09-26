@@ -108,7 +108,8 @@
   ],
   "SpinnerCommandIssued": [
     "moves.applyCommand",
-    "brawl.applySteer"
+    "brawl.applySteer",
+    "rig.view.onCommandAim"
   ],
   "MoveStarted": [
     "rig.onMoveStarted",
@@ -227,5 +228,8 @@
     "rig.view.render",
     "brawl.view.render",
     "style.callouts.animate"
+  ],
+  "TouchAimChanged": [
+    "spinner.onTouchAimChanged"
   ]
 }

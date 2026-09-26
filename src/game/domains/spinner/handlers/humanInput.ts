@@ -1,4 +1,4 @@
-import { JoystickMoved, KeyChanged, TouchButtonChanged } from '@engine/messaging/engineMessages';
+import { JoystickMoved, KeyChanged, TouchAimChanged, TouchButtonChanged } from '@engine/messaging/engineMessages';
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
 import type { DomainContext } from '../../../shared/domainContext';
 import { commandColumns } from '../rules/keyBindings';
@@ -31,6 +31,14 @@ export function humanInputHandlers(state: SpinnerState, ctx: DomainContext): Han
         if (batch.cols.widget[i] !== ctx.data.spinner.touch.joystick.widget) continue;
         writeAll('joyX', batch.cols.x[i]);
         writeAll('joyY', batch.cols.y[i]);
+      }
+    }),
+    // Dragging a held DASH or HOOK aims it during the wind-up; release goes back to the steer.
+    on(TouchAimChanged, 'spinner.onTouchAimChanged', (batch) => {
+      for (let i = 0; i < batch.count; i++) {
+        const active = batch.cols.active[i] === 1;
+        writeAll('aimX', active ? batch.cols.x[i] : 0);
+        writeAll('aimY', active ? batch.cols.y[i] : 0);
       }
     }),
     // A button press queues its command; SHATTER presses Dash and Whirl together.

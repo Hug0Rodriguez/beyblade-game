@@ -37,6 +37,8 @@ export function readHumanCommandsHandler(state: SpinnerState, ctx: DomainContext
           spinnerId: state.humans.ids[row],
           steerX,
           steerY,
+          aimX: h.aimX[row],
+          aimY: h.aimY[row],
           dash: h.dashQueued[row],
           pop: h.popQueued[row],
           whirl: h.whirlQueued[row],

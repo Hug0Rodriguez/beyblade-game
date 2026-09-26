@@ -16,6 +16,9 @@ const humanSchema = {
   steerRight: 'u8',
   joyX: 'f64',
   joyY: 'f64',
+  /** A held attack button dragged past its threshold: where the move should go (zero = use the steer). */
+  aimX: 'f64',
+  aimY: 'f64',
   dashQueued: 'u8',
   popQueued: 'u8',
   whirlQueued: 'u8',
