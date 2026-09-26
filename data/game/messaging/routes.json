@@ -36,6 +36,7 @@
   ],
   "StateEntered": [
     "engine.screens.onStateEntered",
+    "engine.gui.onStateEntered",
     "spinner.onFlowState",
     "spinner.observeMoves",
     "dish.onFlowState",
@@ -216,7 +217,6 @@
   ],
   "ViewportResized": [
     "engine.screens.onViewportResized",
-    "spinner.view.layout",
     "rig.view.layoutHud",
     "style.view.layout",
     "match.view.layout",

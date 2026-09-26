@@ -1,41 +1,49 @@
-import { Container } from 'pixi.js';
-import { PointerKindDetected, StateEntered, ViewportResized } from '@engine/messaging/engineMessages';
+import '../../../gui/touch.css';
+import { PointerKindDetected, StateEntered } from '@engine/messaging/engineMessages';
 import { on, type HandlerDef } from '@engine/messaging/handlerRegistry';
-import { createTouchButton } from '@engine/input/touchWidgets/touchButton';
-import { createVirtualJoystick } from '@engine/input/touchWidgets/virtualJoystick';
-import { orientationOf } from '@engine/screens/orientation';
+import { createDomTouchButton } from '@engine/input/touchWidgets/domTouchButton';
+import { createDomJoystick } from '@engine/input/touchWidgets/domJoystick';
 import { SpinnerAssigned } from '../../../messages/spinnerMessages';
 import { RevChanged, ShatterReady } from '../../../messages/styleMessages';
 import type { ViewContext } from '../../../shared/domainContext';
 import { rigOfSpinner } from '../../../shared/ids';
 
 /**
- * On-screen controls: a floating joystick + the action buttons (shown once a touch is seen).
- * The chord button reads SHATTER when the Shatter is ready and REV when it would Rev Cancel.
+ * On-screen controls (HTML): a floating stick and the action pad, shown once a touch is seen.
+ * The pad is a grid: the primary button (DASH) is one tall slab, the others stack beside it,
+ * and the chord button (SHATTER / REV) sits on top when it applies. CSS places the pad in the
+ * gutter beside the dish (landscape) or under it (portrait).
  */
 export function touchControlsViewHandlers(ctx: ViewContext): HandlerDef[] {
   const touch = ctx.data.spinner.touch;
-  const font = ctx.data.hud.hud.font;
+  const layer = ctx.gui.layer('touch');
+  layer.classList.add('touch-layer');
+  layer.style.display = 'none';
+  layer.style.setProperty('--dish-half', String(50 / ctx.data.screens.screens.worldMargin));
+  layer.style.setProperty('--pad-gap', `${touch.pad.gapPx}px`);
+  layer.style.setProperty('--pad-margin', `${touch.pad.marginPx}px`);
+  layer.style.setProperty('--pad-landscape-height', String(touch.pad.landscapeHeightRatio * 100));
+  layer.style.setProperty('--pad-primary-ratio', `${touch.pad.primaryColumnRatio}fr`);
+  layer.style.setProperty('--button-alpha', String(touch.buttonStyle.alpha));
+  layer.style.setProperty('--button-pressed-alpha', String(touch.buttonStyle.pressedAlpha));
+  layer.style.setProperty('--button-label-color', touch.buttonStyle.labelColor);
+  layer.style.setProperty('--button-font-size', `${touch.buttonStyle.fontSize}px`);
 
-  const controls = new Container();
-  controls.visible = false;
-  ctx.screens.layer('touch').addChild(controls);
+  const joystick = createDomJoystick(ctx.bus, touch.joystick.widget, touch.joystick);
+  layer.appendChild(joystick.zone);
 
-  const joystick = createVirtualJoystick(ctx.bus, touch.joystick.widget, touch.joystick);
-  controls.addChild(joystick.view);
+  const pad = document.createElement('div');
+  pad.className = 'pad';
+  layer.appendChild(pad);
   const buttons = touch.buttons.map((spec) => {
-    const button = createTouchButton(ctx.bus, spec.widget, {
-      radius: spec.radius,
-      color: spec.color,
-      alpha: touch.buttonStyle.alpha,
-      pressedAlpha: touch.buttonStyle.pressedAlpha,
+    const button = createDomTouchButton(ctx.bus, spec.widget, {
       label: spec.label,
-      labelColor: touch.buttonStyle.labelColor,
-      fontFamily: font.fontFamily,
-      fontSize: touch.buttonStyle.fontSize,
+      color: spec.color,
+      aimThresholdPx: spec.aimable ? touch.aim.thresholdPx : 0,
     });
-    button.view.visible = !spec.onlyWhenShatterReady;
-    controls.addChild(button.view);
+    button.element.classList.add(`pad-${spec.slot}`);
+    button.element.classList.toggle('hidden', spec.onlyWhenShatterReady === true);
+    pad.appendChild(button.element);
     return { spec, button };
   });
 
@@ -51,7 +59,7 @@ export function touchControlsViewHandlers(ctx: ViewContext): HandlerDef[] {
     for (const { spec, button } of buttons) {
       if (!spec.onlyWhenShatterReady) continue;
       const showRev = canCancel && spec.revLabel !== undefined;
-      button.view.visible = shatterReady || showRev;
+      button.element.classList.toggle('hidden', !(shatterReady || showRev));
       button.setLabel(shatterReady || !showRev ? spec.label : (spec.revLabel ?? spec.label));
     }
   };
@@ -75,23 +83,7 @@ export function touchControlsViewHandlers(ctx: ViewContext): HandlerDef[] {
       refreshChord();
     }),
     on(PointerKindDetected, 'spinner.view.onPointerKind', (batch) => {
-      if (batch.count > 0 && batch.cols.touch[batch.count - 1] === 1) controls.visible = true;
-    }),
-    // Portrait positions are the data as authored; landscape moves the stick and buttons into the
-    // gutters beside the dish (the dish fills the height there).
-    on(ViewportResized, 'spinner.view.layout', (batch) => {
-      const width = batch.cols.width[batch.count - 1];
-      const height = batch.cols.height[batch.count - 1];
-      const landscape = orientationOf(width, height) === 'landscape' ? touch.landscape : undefined;
-      const zone = landscape?.joystick?.zone ?? touch.joystick.zone;
-      const rest = landscape?.joystick?.rest ?? touch.joystick.rest;
-      joystick.setZone(zone.x * width, zone.y * height, zone.width * width, zone.height * height);
-      joystick.setRestPosition(rest.x * width, rest.y * height);
-      for (const { spec, button } of buttons) {
-        const at = landscape?.buttons?.[spec.widget];
-        button.view.position.set((at ?? spec).x * width, (at ?? spec).y * height);
-        button.view.scale.set((at?.radius ?? spec.radius) / spec.radius);
-      }
+      if (batch.count > 0 && batch.cols.touch[batch.count - 1] === 1) layer.style.display = '';
     }),
   ];
 }

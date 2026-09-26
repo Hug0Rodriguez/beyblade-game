@@ -19,8 +19,6 @@ export type ButtonName = 'dash' | 'pop' | 'whirl' | 'hook';
 
 export interface JoystickData {
   readonly widget: string;
-  readonly zone: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
-  readonly rest: { readonly x: number; readonly y: number };
   readonly radius: number;
   readonly knobRadius: number;
   readonly deadzone: number;
@@ -35,10 +33,11 @@ export interface TouchButtonData {
   /** Which command(s) the button presses. */
   readonly command: ButtonName | 'shatter';
   readonly label: string;
-  readonly x: number;
-  readonly y: number;
-  readonly radius: number;
+  /** Where it sits in the pad: the tall "primary" column, the "stack" column, or the "chord" row on top. */
+  readonly slot: 'primary' | 'stack' | 'chord';
   readonly color: string;
+  /** Dragging the held button aims the move during its wind-up. */
+  readonly aimable?: boolean;
   /** Only shown while this Spinner's Shatter is ready (or, with `revLabel`, while a Rev Cancel is available). */
   readonly onlyWhenShatterReady?: boolean;
   /** Label while the same chord would Rev Cancel instead (recovering or stunned with a Rank to spend). */
@@ -69,19 +68,6 @@ export interface CpuCombo {
   readonly steps: readonly { readonly at: number; readonly press: ButtonName }[];
 }
 
-/** A point in screen fractions (0..1 of width / height). */
-export interface ScreenPoint {
-  readonly x: number;
-  readonly y: number;
-}
-
-/** Landscape overrides for the touch layout: only the positions that differ from portrait. */
-export interface TouchLandscapeLayout {
-  readonly joystick?: { readonly zone?: JoystickData['zone']; readonly rest?: JoystickData['rest'] };
-  /** Button widget → position, and a smaller radius where the gutter is narrow. */
-  readonly buttons?: Readonly<Record<string, ScreenPoint & { readonly radius?: number }>>;
-}
-
 export interface SpinnerData {
   readonly spinners: readonly SpinnerEntry[];
   readonly keyboard: { readonly bindings: Readonly<Record<HumanCommandName, readonly string[]>> };
@@ -89,7 +75,9 @@ export interface SpinnerData {
     readonly joystick: JoystickData;
     readonly buttons: readonly TouchButtonData[];
     readonly buttonStyle: { readonly alpha: number; readonly pressedAlpha: number; readonly labelColor: string; readonly fontSize: number };
-    readonly landscape?: TouchLandscapeLayout;
+    readonly aim: { readonly thresholdPx: number };
+    /** The action pad grid: gaps, margins, how tall it is in landscape, how wide the primary column is. */
+    readonly pad: { readonly gapPx: number; readonly marginPx: number; readonly landscapeHeightRatio: number; readonly primaryColumnRatio: number };
   };
   readonly cpuProfiles: readonly CpuProfile[];
   readonly cpuTactics: FsmDefinition;

@@ -1,0 +1,59 @@
+/*
+ * Touch controls layout. The dish fills the short side of the screen (its radius is
+ * --dish-half of the short side, from screens.json worldMargin). Landscape: stick in the
+ * left gutter, action pad in the right gutter. Portrait: both in the band under the dish.
+ */
+.touch-layer {
+  --gutter: calc(50cqw - var(--dish-half) * 1cqh);
+}
+.touch-layer .stick-zone {
+  left: 0;
+  top: 20%;
+  width: max(var(--gutter), 33cqw);
+  height: 80%;
+}
+.touch-layer .pad {
+  position: absolute;
+  right: var(--pad-margin);
+  bottom: var(--pad-margin);
+  width: calc(max(var(--gutter), 26cqw) - var(--pad-margin) * 1.5);
+  height: calc(var(--pad-landscape-height) * 1cqh);
+  display: grid;
+  grid-template-columns: var(--pad-primary-ratio) 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: var(--pad-gap);
+}
+.pad .pad-chord {
+  grid-column: 1 / 3;
+  grid-row: 1;
+}
+.pad .pad-chord.hidden {
+  visibility: hidden;
+}
+.pad .pad-primary {
+  grid-column: 1;
+  grid-row: 2 / 5;
+}
+.pad .pad-stack {
+  grid-column: 2;
+}
+@media (orientation: portrait) {
+  .touch-layer {
+    /* Bottom edge of the dish, measured from the top of the GUI. */
+    --dish-bottom: calc(50cqh + var(--dish-half) * 1cqw);
+  }
+  .touch-layer .stick-zone {
+    left: 0;
+    top: var(--dish-bottom);
+    width: 50%;
+    height: calc(100cqh - var(--dish-bottom));
+  }
+  .touch-layer .pad {
+    left: calc(50% + var(--pad-gap));
+    right: var(--pad-margin);
+    top: calc(var(--dish-bottom) + var(--pad-margin));
+    bottom: var(--pad-margin);
+    width: auto;
+    height: auto;
+  }
+}

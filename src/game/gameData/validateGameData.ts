@@ -40,11 +40,9 @@ export function validateGameData(data: GameData): void {
     if (command.combo) v.requireRef(`spinner/cpu/tacticCommands.${state}.combo`, command.combo, ids(spinner.cpuCombos));
   }
 
-  // Touch: the landscape layout only repositions buttons that exist.
-  const touchWidgets = spinner.touch.buttons.map((button) => button.widget);
-  for (const widget of Object.keys(spinner.touch.landscape?.buttons ?? {})) {
-    v.requireRef('spinner/human/touch.landscape.buttons', widget, touchWidgets);
-  }
+  // Touch: one tall primary button, the rest stacked or on the chord row.
+  spinner.touch.buttons.forEach((button, i) => v.requireOneOf(`spinner/human/touch.buttons[${i}].slot`, button.slot, ['primary', 'stack', 'chord']));
+  if (spinner.touch.buttons.filter((button) => button.slot === 'primary').length !== 1) v.error('spinner/human/touch.buttons: exactly one "primary" slot');
 
   // Moves: every move in the table is a moveFlow state with tuning.
   const moveNames = Object.keys(moves.moveTuning.moves);

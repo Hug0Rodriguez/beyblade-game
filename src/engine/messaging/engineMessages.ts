@@ -9,6 +9,8 @@ export const KeyChanged = defineMessage('KeyChanged', { key: 'u16', down: 'u8' }
 export const PointerKindDetected = defineMessage('PointerKindDetected', { touch: 'u8' });
 export const JoystickMoved = defineMessage('JoystickMoved', { widget: 'str', x: 'f64', y: 'f64' });
 export const TouchButtonChanged = defineMessage('TouchButtonChanged', { widget: 'str', down: 'u8' });
+/** A held action button dragged past its aim threshold: a unit direction, or active 0 on release. */
+export const TouchAimChanged = defineMessage('TouchAimChanged', { widget: 'str', x: 'f64', y: 'f64', active: 'u8' });
 export const DragChanged = defineMessage('DragChanged', {
   widget: 'str',
   active: 'u8',
@@ -32,6 +34,7 @@ export const engineMessages = [
   PointerKindDetected,
   JoystickMoved,
   TouchButtonChanged,
+  TouchAimChanged,
   DragChanged,
   TimeScaleRequested,
   StateEntered,

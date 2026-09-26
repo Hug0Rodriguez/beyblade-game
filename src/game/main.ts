@@ -5,6 +5,8 @@ import { createRuntime } from '@engine/runtime/createRuntime';
 import { startFixedStepLoop } from '@engine/runtime/fixedStepLoop';
 import { createTimeScale } from '@engine/runtime/timeScale';
 import { createScreenHost } from '@engine/screens/screenHost';
+import { createGuiHost } from '@engine/gui/guiHost';
+import { createTouchReadout } from '@engine/dev/touchReadout';
 import { attachKeyboardDevice } from '@engine/input/devices/keyboardDevice';
 import { attachPointerDevice } from '@engine/input/devices/pointerDevice';
 import { attachFullscreenOnTouch } from '@engine/runtime/fullscreen';
@@ -22,6 +24,7 @@ import { validateGameData } from './gameData/validateGameData';
 import { gameMessages } from './messages';
 import type { DomainContext, ViewContext } from './shared/domainContext';
 import { selectedDish } from './shared/dataLookups';
+import { guiTokens } from './gui/guiTokens';
 
 /** Composition root: config → data → runtime → bus → world → routes → boot messages → loop. */
 async function main(): Promise<void> {
@@ -44,6 +47,8 @@ async function main(): Promise<void> {
     worldSize: selectedDish(data).radius * 2 * data.screens.screens.worldMargin,
   });
 
+  const gui = createGuiHost(parent, { ...data.screens.screens, cssVars: guiTokens(data) });
+
   const dev = engine.dev.enabled && import.meta.env.DEV;
   const inspector = dev ? createTableInspector(engine.dev.tableInspectorKey) : undefined;
   const ctx: DomainContext = {
@@ -52,15 +57,16 @@ async function main(): Promise<void> {
     random: (salt) => createSeededRandom(data.boot.random.seed ^ hashString(salt)),
     inspect: (owner, table) => inspector?.register(owner, table),
   };
-  const view: ViewContext = { ...ctx, screens, bus };
+  const view: ViewContext = { ...ctx, screens, gui, bus };
 
   const timeScale = createTimeScale();
   const world = createWorld(domainRegistry, ctx);
-  registerHandlers(bus, domainRegistry, world, ctx, view, [...screens.handlers(), ...timeScale.handlers()]);
+  registerHandlers(bus, domainRegistry, world, ctx, view, [...screens.handlers(), ...gui.handlers(), ...timeScale.handlers()]);
 
   attachKeyboardDevice(bus, watchedKeyCodes(data));
   attachPointerDevice(bus, app.canvas);
   if (engine.runtime.fullscreenOnTouch) attachFullscreenOnTouch(app.canvas);
+  if (new URLSearchParams(location.search).has('debug')) createTouchReadout(parent, app);
   if (dev) {
     bus.observe(createMessageLog(engine.dev.messageLogKey, engine.dev.messageLogQuiet));
     void createTuningPanel(data as unknown as Record<string, unknown>, {

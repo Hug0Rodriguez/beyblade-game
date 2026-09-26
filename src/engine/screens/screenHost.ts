@@ -5,8 +5,8 @@ import { on, type HandlerDef } from '../messaging/handlerRegistry';
 
 export interface ScreenLayerSpec {
   readonly name: string;
-  /** "world" layers are centred and scaled to fit `worldSize`; "screen" layers use raw pixels. */
-  readonly space: 'world' | 'screen';
+  /** "world" layers are centred and scaled to fit `worldSize`; "screen" layers use raw pixels; "gui" layers are HTML (guiHost). */
+  readonly space: 'world' | 'screen' | 'gui';
 }
 
 export interface ScreenHostConfig {
@@ -40,6 +40,7 @@ export function createScreenHost(stage: Container, config: ScreenHostConfig): Sc
 
   const layers = new Map<string, Container>();
   for (const spec of config.layers) {
+    if (spec.space === 'gui') continue;
     const layer = new Container();
     layer.label = spec.name;
     layer.visible = false;

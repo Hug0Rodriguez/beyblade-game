@@ -1,0 +1,119 @@
+/* The GUI overlay: a stack of layers over the canvas. Nothing here catches touches unless it says so. */
+#gui {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+  font-family: var(--gui-font, system-ui, sans-serif);
+  font-weight: var(--gui-weight, 900);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.gui-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.gui-layer[hidden] {
+  display: none;
+}
+
+/* Floating thumbstick: the base appears where the finger lands inside the zone. */
+.stick-zone {
+  position: absolute;
+  pointer-events: auto;
+  touch-action: none;
+}
+.stick-base {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--stick-radius) * 2px);
+  height: calc(var(--stick-radius) * 2px);
+  margin: calc(var(--stick-radius) * -1px);
+  border-radius: 50%;
+  background: var(--stick-base-color);
+  opacity: var(--stick-base-alpha);
+  box-shadow: inset 0 0 0 2px var(--stick-knob-color);
+  will-change: transform;
+}
+.stick-knob {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--stick-knob-radius) * 2px);
+  height: calc(var(--stick-knob-radius) * 2px);
+  margin: calc(var(--stick-knob-radius) * -1px);
+  border-radius: 50%;
+  background: var(--stick-knob-color);
+  opacity: var(--stick-knob-alpha);
+  will-change: transform;
+}
+
+/* Action button: a filled slab with a glyph and a word. */
+.touch-button {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto;
+  touch-action: none;
+  border-radius: 14px;
+  background: var(--button-color);
+  color: var(--button-label-color);
+  opacity: var(--button-alpha);
+  font: inherit;
+  font-size: var(--button-font-size);
+  letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: opacity 80ms;
+  position: relative;
+}
+.touch-button.pressed {
+  opacity: var(--button-pressed-alpha);
+}
+.touch-button.disabled {
+  opacity: calc(var(--button-alpha) * 0.45);
+}
+.touch-button > svg {
+  width: 40%;
+  max-width: 44px;
+  aspect-ratio: 1;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.touch-button > svg:empty {
+  display: none;
+}
+/* Counter hint: the rival's move glyph in the corner, and a glow in its colour. */
+.touch-button .hint {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 26px;
+  height: 26px;
+  display: none;
+}
+.touch-button.hinted {
+  opacity: var(--button-pressed-alpha);
+  box-shadow: 0 0 0 3px var(--hint-color), 0 0 18px var(--hint-color);
+  animation: gui-hint-pulse 0.5s ease-in-out infinite alternate;
+}
+.touch-button.hinted .hint {
+  display: block;
+}
+@keyframes gui-hint-pulse {
+  from { box-shadow: 0 0 0 3px var(--hint-color), 0 0 10px var(--hint-color); }
+  to { box-shadow: 0 0 0 5px var(--hint-color), 0 0 26px var(--hint-color); }
+}

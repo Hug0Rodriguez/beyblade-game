@@ -4,6 +4,7 @@ import type { MessageBus } from '@engine/messaging/messageBus';
 import type { Schema } from '@engine/tables/columns';
 import type { Table } from '@engine/tables/defineTable';
 import type { ScreenHost } from '@engine/screens/screenHost';
+import type { GuiHost } from '@engine/gui/guiHost';
 import type { GameData } from '../gameData/gameData';
 
 export type Publish = MessageBus['publish'];
@@ -18,9 +19,10 @@ export interface DomainContext {
   inspect(owner: string, table: Table<Schema>): void;
 }
 
-/** Views additionally get the screen layers and the bus (engine touch widgets publish on it). */
+/** Views additionally get the Pixi screen layers, the HTML GUI layers and the bus (engine widgets publish on it). */
 export interface ViewContext extends DomainContext {
   readonly screens: ScreenHost;
+  readonly gui: GuiHost;
   readonly bus: MessageBus;
 }
 

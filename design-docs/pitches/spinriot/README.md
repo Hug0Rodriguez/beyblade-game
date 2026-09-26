@@ -171,7 +171,10 @@ Steve Swink (*Game Feel*) defines game feel as *real-time control of virtual obj
 ## Play it on a phone
 The game is deployed by GitHub Actions from `main` to **https://hug0rodriguez.github.io/beyblade-game/** (`.github/workflows/deploy.yml`).
 
-- **Landscape or portrait**, both work; every layout block in the data (`touch.json`, `hud.json` → `screenLayout`, `shatterPrompt`) may carry a `landscape` sub-object that overrides only the fields that differ. `src/engine/screens/orientation.ts` picks it from the `ViewportResized` size.
+- **The GUI is HTML/CSS** (`src/engine/gui/guiHost.ts`): screen layers marked `"space": "gui"` in `screens.json` are `<section>`s stacked over the Pixi canvas, laid out with CSS (`@media (orientation: …)`, container units, safe-area insets). The dish, Rigs, trails and in-dish tells stay in Pixi. Pixi's event system never handles `pointercancel`, which iOS fires freely (a second finger, an edge swipe), so the old canvas stick died after one cancelled touch. The DOM stick and buttons (`src/engine/input/touchWidgets/dom*.ts`) capture their pointer and release on up, cancel, lost capture, blur and page-hide.
+- **The action pad** (`data/game/spinner/human/touch.json`, `src/game/gui/touch.css`) is a grid that fills the gutter beside the dish in landscape, or the band under it in portrait: DASH is the tall primary slab nearest the thumb, WHIRL / HOOK / JUMP stack beside it, and SHATTER / REV appears on the top row when it applies. Holding DASH or HOOK and dragging aims the move during its wind-up (`TouchAimChanged`).
+- **Landscape or portrait**, both work. The Pixi title / result screens still read a `landscape` override from `hud.json` until they move to HTML too.
+- **Diagnostics on a phone**: add `?debug=1` to the URL for a readout of frame rate, renderer, size, the last pointer event and cancelled-touch count.
 - **Safe area**: the canvas is inset by the notch and home-indicator insets (`#game` in `index.html`), so the HUD and buttons never hide under them.
 - **Fullscreen**: on Android the first tap on the canvas requests fullscreen (`data/engine/runtime.json` → `fullscreenOnTouch`). iPhone Safari has no fullscreen API; use **Share → Add to Home Screen** instead, which launches SPINRIOT without browser bars (`public/manifest.webmanifest`).
 
