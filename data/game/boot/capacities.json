@@ -1,0 +1,20 @@
+{
+  "spinners": 2,
+  "rigs": 2,
+  "particles": 420,
+  "trailPoints": 40,
+  "messageQueues": {
+    "KeyChanged": 64,
+    "JoystickMoved": 64,
+    "TouchButtonChanged": 32,
+    "SpinnerCommandIssued": 8,
+    "DishForcesComputed": 8,
+    "RigBodiesMoved": 8,
+    "RigSpinChanged": 16,
+    "ContactDetected": 8,
+    "HitLanded": 8,
+    "StateEntered": 32,
+    "StateExited": 32,
+    "RevChanged": 16
+  }
+}

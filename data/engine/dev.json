@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "tuningPanelKey": "Backquote",
+  "messageLogKey": "F2",
+  "tableInspectorKey": "F3",
+  "tuningPanelHide": [
+    "messaging",
+    "boot"
+  ],
+  "messageLogQuiet": [
+    "StepTicked",
+    "FrameRendered",
+    "RigBodiesMoved",
+    "RigSpinChanged",
+    "SpinnerCommandIssued",
+    "DishForcesComputed",
+    "RevChanged",
+    "StateExited"
+  ]
+}

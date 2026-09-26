@@ -1,0 +1,9 @@
+{
+  "initial": "brawling",
+  "states": ["brawling", "finishing", "scored"],
+  "startWhen": { "fsm": "gameFlow", "state": "brawl" },
+  "transitions": [
+    { "from": "brawling", "on": "RoundFinished", "to": "finishing" },
+    { "from": "finishing", "to": "scored", "when": [["timeInState", ">=", "$finishHoldSeconds"]] }
+  ]
+}

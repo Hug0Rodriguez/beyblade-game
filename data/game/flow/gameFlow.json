@@ -1,0 +1,13 @@
+{
+  "initial": "title",
+  "states": ["title", "dropIn", "brawl", "matchResult"],
+  "startOn": "GameBooted",
+  "transitions": [
+    { "from": "title", "on": "MatchStarted", "to": "dropIn" },
+    { "from": "dropIn", "on": "CountdownFinished", "to": "brawl" },
+    { "from": "brawl", "on": "RoundScored", "to": "dropIn" },
+    { "from": "brawl", "on": "MatchWon", "to": "matchResult" },
+    { "from": "matchResult", "on": "MatchStarted", "to": "dropIn" },
+    { "from": "matchResult", "on": "TitleRequested", "to": "title" }
+  ]
+}

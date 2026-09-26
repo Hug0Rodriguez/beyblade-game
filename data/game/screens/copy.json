@@ -1,0 +1,18 @@
+{
+  "title": "SPINRIOT",
+  "tagline": "Style is how you kill.",
+  "titlePromptKeyboard": "PRESS J TO RIOT",
+  "titlePromptTouch": "TAP RIOT! TO START",
+  "startButton": "RIOT!",
+  "controlsKeyboard": "WASD move · J dash · L whirl · I hook · K jump / dive",
+  "controlsTouch": "Stick to move · DASH · WHIRL · HOOK · JUMP",
+  "brawlHintKeyboard": "DASH J › HOOK I › WHIRL L › DASH  ·  K jump, K again DIVE punishes  ·  J+L Rev: cancel / shatter",
+  "brawlHintTouch": "DASH › HOOK › WHIRL › DASH · DIVE punishes",
+  "matchWinner": "{name} WINS!",
+  "rematch": "REMATCH",
+  "toTitle": "TITLE",
+  "roundLabel": "ROUND {round}",
+  "rematchKeyHint": "ENTER to rematch",
+  "shatterPromptKeyboard": "SHATTER READY · J + L",
+  "shatterPromptTouch": "SHATTER READY"
+}

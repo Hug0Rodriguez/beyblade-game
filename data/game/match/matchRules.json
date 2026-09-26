@@ -1,0 +1,5 @@
+{
+  "pointsToWin": 4,
+  "winWhen": [["points", ">=", "$pointsToWin"]],
+  "settleWhen": { "fsm": "roundFlow", "state": "scored" }
+}

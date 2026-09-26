@@ -1,0 +1,13 @@
+{
+  "followRate": 5.5,
+  "zoomRate": 3.5,
+  "nearDistance": 120,
+  "farDistance": 520,
+  "nearZoom": 1.32,
+  "farZoom": 0.96,
+  "speedZoomOut": 0.00018,
+  "leadSeconds": 0.12,
+  "centerPull": 0.35,
+  "hitPunchPerShake": 0.06,
+  "finishPunch": 0.25
+}

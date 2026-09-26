@@ -1,0 +1,25 @@
+{
+  "background": "#08060f",
+  "worldMargin": 1.16,
+  "fsm": "gameFlow",
+  "layers": [
+    { "name": "dish", "space": "world" },
+    { "name": "shadows", "space": "world" },
+    { "name": "trails", "space": "world" },
+    { "name": "rigs", "space": "world" },
+    { "name": "fx", "space": "world" },
+    { "name": "callouts", "space": "world" },
+    { "name": "hud", "space": "screen" },
+    { "name": "touch", "space": "screen" },
+    { "name": "hints", "space": "screen" },
+    { "name": "banner", "space": "screen" },
+    { "name": "title", "space": "screen" },
+    { "name": "matchResult", "space": "screen" }
+  ],
+  "visibleIn": {
+    "title": ["dish", "title"],
+    "dropIn": ["dish", "shadows", "trails", "rigs", "fx", "callouts", "hud", "hints", "banner"],
+    "brawl": ["dish", "shadows", "trails", "rigs", "fx", "callouts", "hud", "touch", "hints", "banner"],
+    "matchResult": ["dish", "shadows", "trails", "rigs", "fx", "matchResult"]
+  }
+}

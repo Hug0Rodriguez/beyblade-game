@@ -1,0 +1,38 @@
+{
+  "bindings": {
+    "steerUp": [
+      "KeyW",
+      "ArrowUp"
+    ],
+    "steerDown": [
+      "KeyS",
+      "ArrowDown"
+    ],
+    "steerLeft": [
+      "KeyA",
+      "ArrowLeft"
+    ],
+    "steerRight": [
+      "KeyD",
+      "ArrowRight"
+    ],
+    "dash": [
+      "KeyJ",
+      "ShiftLeft",
+      "ShiftRight"
+    ],
+    "pop": [
+      "KeyK",
+      "Space"
+    ],
+    "whirl": [
+      "KeyL"
+    ],
+    "hook": [
+      "KeyI"
+    ],
+    "confirm": [
+      "Enter"
+    ]
+  }
+}

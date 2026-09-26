@@ -1,0 +1,18 @@
+{
+  "approach": {"steer": "towardRival", "steerScale": 1, "press": []},
+  "strike": {"steer": "towardRival", "steerScale": 1, "press": ["dash"]},
+  "hookIn": {"steer": "towardRival", "steerScale": 1, "press": ["hook"]},
+  "circle": {"steer": "orbitRival", "steerScale": 1, "press": []},
+  "recover": {"steer": "towardCenter", "steerScale": 1, "press": []},
+  "guard": {"steer": "hold", "steerScale": 1, "press": ["whirl"]},
+  "counterHook": {"steer": "towardRival", "steerScale": 1, "press": ["hook"]},
+  "interrupt": {"steer": "towardRival", "steerScale": 1, "press": ["dash"]},
+  "juggle": {"steer": "towardRival", "steerScale": 1, "press": [], "combo": "juggleRally"},
+  "breakOut": {"steer": "towardCenter", "steerScale": 1, "press": ["whirl"]},
+  "shatter": {"steer": "towardRival", "steerScale": 1, "press": ["dash", "whirl"], "repeatPress": true},
+  "punishHop": {"steer": "towardRival", "steerScale": 1, "press": ["pop"]},
+  "punishDive": {"steer": "towardRival", "steerScale": 1, "press": ["pop"], "repeatPress": true},
+  "buildGear": {"steer": "rideRim", "steerScale": 1, "press": []},
+  "revEscape": {"steer": "awayFromRival", "steerScale": 1, "press": ["dash", "whirl"]},
+  "dodgeShatter": {"steer": "awayFromRival", "steerScale": 1, "press": ["pop"], "repeatPress": false}
+}

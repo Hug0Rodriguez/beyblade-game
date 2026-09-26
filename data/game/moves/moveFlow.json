@@ -1,0 +1,326 @@
+{
+  "initial": "ground",
+  "states": [
+    "ground",
+    "dashRevUp",
+    "dash",
+    "dashRecover",
+    "whirl",
+    "whirlRecover",
+    "hookReach",
+    "hook",
+    "hookRecover",
+    "pop",
+    "airDash",
+    "airWhirl",
+    "airHook",
+    "dive",
+    "launched",
+    "breakOut",
+    "revBreakOut",
+    "stunned",
+    "shatter"
+  ],
+  "transitions": [
+    {
+      "from": "*",
+      "on": "shatter",
+      "to": "shatter"
+    },
+    {
+      "from": "*",
+      "on": "dashRevUp",
+      "to": "dashRevUp"
+    },
+    {
+      "from": "*",
+      "on": "whirl",
+      "to": "whirl"
+    },
+    {
+      "from": "*",
+      "on": "hookReach",
+      "to": "hookReach"
+    },
+    {
+      "from": "*",
+      "on": "pop",
+      "to": "pop"
+    },
+    {
+      "from": "*",
+      "on": "airDash",
+      "to": "airDash"
+    },
+    {
+      "from": "*",
+      "on": "airWhirl",
+      "to": "airWhirl"
+    },
+    {
+      "from": "*",
+      "on": "airHook",
+      "to": "airHook"
+    },
+    {
+      "from": "*",
+      "on": "dive",
+      "to": "dive"
+    },
+    {
+      "from": "*",
+      "on": "launched",
+      "to": "launched"
+    },
+    {
+      "from": "*",
+      "on": "stunned",
+      "to": "stunned"
+    },
+    {
+      "from": "stunned",
+      "to": "ground",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$stunnedSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "shatter",
+      "to": "ground",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$shatterSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "dashRevUp",
+      "to": "dash",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$dashRevUpSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "dash",
+      "on": "connected",
+      "to": "ground"
+    },
+    {
+      "from": "dash",
+      "to": "dashRecover",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$dashSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "dashRecover",
+      "to": "ground",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$dashRecoverSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "whirl",
+      "on": "connected",
+      "to": "ground"
+    },
+    {
+      "from": "whirl",
+      "to": "whirlRecover",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$whirlSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "whirlRecover",
+      "to": "ground",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$whirlRecoverSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "hookReach",
+      "to": "hook",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$hookReachSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "hook",
+      "on": "connected",
+      "to": "ground"
+    },
+    {
+      "from": "hook",
+      "to": "hookRecover",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$hookSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "hookRecover",
+      "to": "ground",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$hookRecoverSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "airDash",
+      "on": "connected",
+      "to": "pop"
+    },
+    {
+      "from": "airDash",
+      "to": "pop",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$airDashSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "airWhirl",
+      "on": "connected",
+      "to": "pop"
+    },
+    {
+      "from": "airWhirl",
+      "to": "pop",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$airWhirlSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "airHook",
+      "on": "connected",
+      "to": "pop"
+    },
+    {
+      "from": "airHook",
+      "to": "pop",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$airHookSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "launched",
+      "on": "breakOut",
+      "to": "breakOut"
+    },
+    {
+      "from": "launched",
+      "on": "revBreakOut",
+      "to": "revBreakOut"
+    },
+    {
+      "from": "breakOut",
+      "to": "pop",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$breakOutSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "revBreakOut",
+      "to": "pop",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$breakOutSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "pop",
+      "on": "landed",
+      "to": "ground"
+    },
+    {
+      "from": "airDash",
+      "on": "landed",
+      "to": "ground"
+    },
+    {
+      "from": "airWhirl",
+      "on": "landed",
+      "to": "ground"
+    },
+    {
+      "from": "airHook",
+      "on": "landed",
+      "to": "ground"
+    },
+    {
+      "from": "dive",
+      "on": "landed",
+      "to": "ground"
+    },
+    {
+      "from": "launched",
+      "on": "landed",
+      "to": "ground"
+    },
+    {
+      "from": "breakOut",
+      "on": "landed",
+      "to": "ground"
+    },
+    {
+      "from": "revBreakOut",
+      "on": "landed",
+      "to": "ground"
+    }
+  ]
+}

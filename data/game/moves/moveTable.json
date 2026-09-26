@@ -1,0 +1,273 @@
+[
+  {
+    "move": "shatter",
+    "priority": 0,
+    "when": [
+      [
+        "button",
+        "==",
+        "combo"
+      ],
+      [
+        "shatterReady",
+        "==",
+        1
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ]
+    ]
+  },
+  {
+    "move": "revBreakOut",
+    "priority": 1,
+    "when": [
+      [
+        "state",
+        "==",
+        "launched"
+      ],
+      [
+        "revBreakOutReady",
+        "==",
+        1
+      ],
+      [
+        "rank",
+        ">=",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "breakOut",
+    "priority": 2,
+    "when": [
+      [
+        "state",
+        "==",
+        "launched"
+      ],
+      [
+        "breakOutReady",
+        "==",
+        1
+      ],
+      [
+        "spinRatio",
+        ">",
+        "$breakOutMinSpinRatio"
+      ]
+    ]
+  },
+  {
+    "move": "dashRevUp",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "dash"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        0
+      ],
+      [
+        "dashRevUpReady",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "airDash",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "dash"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        1
+      ],
+      [
+        "airDashReady",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "whirl",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "whirl"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        0
+      ],
+      [
+        "whirlReady",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "airWhirl",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "whirl"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        1
+      ],
+      [
+        "airWhirlReady",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "hookReach",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "hook"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        0
+      ],
+      [
+        "hookReachReady",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "airHook",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "hook"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        1
+      ],
+      [
+        "airHookReady",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "pop",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "pop"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        0
+      ],
+      [
+        "popReady",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "move": "dive",
+    "priority": 5,
+    "when": [
+      [
+        "button",
+        "==",
+        "pop"
+      ],
+      [
+        "locked",
+        "==",
+        0
+      ],
+      [
+        "airborne",
+        "==",
+        1
+      ],
+      [
+        "state",
+        "!=",
+        "dive"
+      ]
+    ]
+  }
+]

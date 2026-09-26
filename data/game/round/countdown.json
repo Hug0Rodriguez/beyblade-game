@@ -1,0 +1,11 @@
+{
+  "beats": ["3", "2", "1", "RIOT!"],
+  "beatSeconds": 0.55,
+  "dropHeight": 240,
+  "beatColor": "#eef2ff",
+  "goColor": "#ff4fd8",
+  "slots": [
+    { "x": -0.45, "y": 0 },
+    { "x": 0.45, "y": 0 }
+  ]
+}

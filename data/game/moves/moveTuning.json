@@ -1,0 +1,169 @@
+{
+  "fsm": "moveFlow",
+  "timings": {
+    "dashRevUpSeconds": 0.12,
+    "dashSeconds": 0.26,
+    "dashRecoverSeconds": 0.22,
+    "whirlSeconds": 0.35,
+    "whirlRecoverSeconds": 0.3,
+    "hookReachSeconds": 0.18,
+    "hookSeconds": 0.14,
+    "hookRecoverSeconds": 0.3,
+    "airDashSeconds": 0.22,
+    "airWhirlSeconds": 0.3,
+    "airHookSeconds": 0.14,
+    "breakOutSeconds": 0.12,
+    "stunnedSeconds": 0.45,
+    "breakOutMinSpinRatio": 0.1,
+    "shatterSeconds": 0.6
+  },
+  "lockedStates": [
+    "stunned",
+    "launched",
+    "dashRevUp",
+    "dash",
+    "dashRecover",
+    "whirl",
+    "whirlRecover",
+    "hookReach",
+    "hook",
+    "hookRecover",
+    "airDash",
+    "airWhirl",
+    "airHook",
+    "shatter"
+  ],
+  "vulnerableStates": [
+    "stunned",
+    "launched",
+    "dashRecover",
+    "whirlRecover",
+    "hookRecover"
+  ],
+  "moves": {
+    "dashRevUp": {
+      "impulse": "none",
+      "activeSeconds": 0,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.1,
+      "attackKind": "none"
+    },
+    "dash": {
+      "impulse": "boost",
+      "activeSeconds": 0.26,
+      "iFrameSeconds": 0.0,
+      "cooldownSeconds": 0,
+      "attackKind": "strike",
+      "boost": 230
+    },
+    "whirl": {
+      "impulse": "none",
+      "activeSeconds": 0.35,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.1,
+      "attackKind": "guard",
+      "reachRatio": 1.7
+    },
+    "hookReach": {
+      "impulse": "none",
+      "activeSeconds": 0,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.1,
+      "attackKind": "none"
+    },
+    "hook": {
+      "impulse": "none",
+      "activeSeconds": 0.14,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0,
+      "attackKind": "grab",
+      "reachRatio": 1.9,
+      "reachArcRadians": 1.6,
+      "aimAtPress": true
+    },
+    "pop": {
+      "impulse": "hop",
+      "vz": 520,
+      "activeSeconds": 0,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.12,
+      "attackKind": "none"
+    },
+    "airDash": {
+      "impulse": "burst",
+      "speed": 560,
+      "activeSeconds": 0.22,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.55,
+      "attackKind": "strike"
+    },
+    "airWhirl": {
+      "impulse": "none",
+      "activeSeconds": 0.3,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.3,
+      "attackKind": "guard",
+      "reachRatio": 1.7
+    },
+    "airHook": {
+      "impulse": "none",
+      "activeSeconds": 0.14,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.4,
+      "attackKind": "grab",
+      "reachRatio": 1.9,
+      "reachArcRadians": 1.6,
+      "aimAtPress": true
+    },
+    "dive": {
+      "impulse": "dive",
+      "vz": 950,
+      "speed": 420,
+      "activeSeconds": 1.0,
+      "iFrameSeconds": 0,
+      "cooldownSeconds": 0.2,
+      "attackKind": "slam"
+    },
+    "breakOut": {
+      "impulse": "breakOut",
+      "vz": 220,
+      "activeSeconds": 0,
+      "iFrameSeconds": 0.5,
+      "cooldownSeconds": 2.5,
+      "attackKind": "none",
+      "spinCostRatio": 0.08
+    },
+    "shatter": {
+      "impulse": "homing",
+      "speed": 900,
+      "activeSeconds": 0.6,
+      "iFrameSeconds": 0.6,
+      "cooldownSeconds": 1.0,
+      "attackKind": "shatter"
+    },
+    "revBreakOut": {
+      "impulse": "breakOut",
+      "vz": 220,
+      "activeSeconds": 0,
+      "iFrameSeconds": 0.5,
+      "cooldownSeconds": 2.5,
+      "attackKind": "none",
+      "revRankCost": 1
+    }
+  },
+  "comboWindowSeconds": 0.08,
+  "revCancel": {
+    "states": [
+      "dashRecover",
+      "whirlRecover",
+      "hookRecover",
+      "stunned"
+    ],
+    "rankCost": 1,
+    "to": "ground"
+  },
+  "chainedMoves": [
+    "dash",
+    "hook"
+  ]
+}

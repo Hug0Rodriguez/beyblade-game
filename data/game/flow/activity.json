@@ -1,0 +1,33 @@
+{
+  "simulation": [
+    "dropIn",
+    "brawl"
+  ],
+  "commands": [
+    "brawl"
+  ],
+  "brawling": [
+    "brawl"
+  ],
+  "roundStartsOn": [
+    "dropIn"
+  ],
+  "menus": {
+    "title": {
+      "commands": [
+        "dash",
+        "pop",
+        "whirl",
+        "hook",
+        "confirm"
+      ],
+      "message": "StartRequested"
+    },
+    "matchResult": {
+      "commands": [
+        "confirm"
+      ],
+      "message": "RematchRequested"
+    }
+  }
+}

@@ -1,0 +1,338 @@
+[
+  {
+    "hit": "ghost",
+    "priority": 0,
+    "when": [
+      [
+        "defenderIFrames",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "shatter",
+    "priority": 0,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "shatter"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "deflect",
+    "priority": 1,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "strike"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderAttackKind",
+        "==",
+        "guard"
+      ]
+    ]
+  },
+  {
+    "hit": "deflect",
+    "priority": 1,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "slam"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderAttackKind",
+        "==",
+        "guard"
+      ]
+    ]
+  },
+  {
+    "hit": "interrupt",
+    "priority": 1,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "strike"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderAttackKind",
+        "==",
+        "grab"
+      ]
+    ]
+  },
+  {
+    "hit": "interrupt",
+    "priority": 1,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "strike"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderMove",
+        "==",
+        "hookReach"
+      ]
+    ]
+  },
+  {
+    "hit": "spike",
+    "priority": 2,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "grab"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderAirborne",
+        "==",
+        1
+      ],
+      [
+        "defenderAttackKind",
+        "!=",
+        "strike"
+      ]
+    ]
+  },
+  {
+    "hit": "sling",
+    "priority": 2,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "grab"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderAirborne",
+        "==",
+        0
+      ],
+      [
+        "defenderAttackKind",
+        "!=",
+        "strike"
+      ]
+    ]
+  },
+  {
+    "hit": "punish",
+    "priority": 2,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "slam"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderVulnerable",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "clash",
+    "priority": 3,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "strike"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderAttackKind",
+        "==",
+        "strike"
+      ]
+    ]
+  },
+  {
+    "hit": "grabSlip",
+    "priority": 1,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "grab"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "defenderAttackKind",
+        "==",
+        "grab"
+      ]
+    ]
+  },
+  {
+    "hit": "outOfTheAir",
+    "priority": 4,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "strike"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "attackerAirborne",
+        "==",
+        0
+      ],
+      [
+        "defenderAirborne",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "slam",
+    "priority": 4,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "slam"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "attackerAbove",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "airStrike",
+    "priority": 5,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "strike"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ],
+      [
+        "attackerAirborne",
+        "==",
+        1
+      ],
+      [
+        "defenderAirborne",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "strike",
+    "priority": 6,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "strike"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "strike",
+    "priority": 6,
+    "when": [
+      [
+        "attackKind",
+        "==",
+        "slam"
+      ],
+      [
+        "attackerActive",
+        "==",
+        1
+      ]
+    ]
+  },
+  {
+    "hit": "bump",
+    "priority": 9,
+    "when": []
+  }
+]

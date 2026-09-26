@@ -1,0 +1,49 @@
+{
+  "ranks": [
+    {
+      "name": "WOBBLE",
+      "threshold": 0,
+      "multiplier": 1.0,
+      "color": "#9aa3c7"
+    },
+    {
+      "name": "STEADY",
+      "threshold": 60,
+      "multiplier": 1.1,
+      "color": "#6fd3ff"
+    },
+    {
+      "name": "SPINNING",
+      "threshold": 140,
+      "multiplier": 1.2,
+      "color": "#b6ff5c"
+    },
+    {
+      "name": "BLURRED",
+      "threshold": 230,
+      "multiplier": 1.35,
+      "color": "#ffcc00"
+    },
+    {
+      "name": "CYCLONE",
+      "threshold": 340,
+      "multiplier": 1.5,
+      "color": "#ff9d3c"
+    },
+    {
+      "name": "VORTEX",
+      "threshold": 460,
+      "multiplier": 1.7,
+      "color": "#ff4f6d"
+    },
+    {
+      "name": "ZENITH",
+      "threshold": 580,
+      "multiplier": 2.0,
+      "color": "#ff4fd8"
+    }
+  ],
+  "maxPoints": 700,
+  "sustainFromRank": 4,
+  "shatterRank": 6
+}

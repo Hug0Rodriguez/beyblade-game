@@ -1,0 +1,10 @@
+{
+  "finishHoldSeconds": 2.0,
+  "checkFinishesIn": [
+    "brawling"
+  ],
+  "roundLabelSeconds": 0.9,
+  "shatterHits": [
+    "shatter"
+  ]
+}

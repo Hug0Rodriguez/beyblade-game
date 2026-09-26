@@ -1,0 +1,608 @@
+{
+  "initial": "approach",
+  "states": [
+    "approach",
+    "strike",
+    "hookIn",
+    "circle",
+    "recover",
+    "guard",
+    "counterHook",
+    "interrupt",
+    "juggle",
+    "breakOut",
+    "shatter",
+    "punishHop",
+    "punishDive",
+    "buildGear",
+    "revEscape",
+    "dodgeShatter"
+  ],
+  "transitions": [
+    {
+      "from": "*",
+      "to": "breakOut",
+      "when": [
+        [
+          "move",
+          "==",
+          "launched"
+        ],
+        [
+          "spinRatio",
+          ">",
+          "$breakOutMinSpinRatio"
+        ],
+        [
+          "roll",
+          "<",
+          "$breakOutChance"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "dodgeShatter",
+      "when": [
+        [
+          "rivalMove",
+          "==",
+          "shatter"
+        ],
+        [
+          "airborne",
+          "==",
+          0
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$dodgeRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$dodgeChance"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "revEscape",
+      "when": [
+        [
+          "canRevCancel",
+          "==",
+          1
+        ],
+        [
+          "move",
+          "!=",
+          "whirlRecover"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$revEscapeRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$revCancelChance"
+        ],
+        [
+          "shatterReady",
+          "==",
+          0
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "shatter",
+      "when": [
+        [
+          "shatterReady",
+          "==",
+          1
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$shatterRange"
+        ],
+        [
+          "rivalAirborne",
+          "==",
+          0
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "recover",
+      "when": [
+        [
+          "edgeRatio",
+          ">=",
+          "$edgeFearRatio"
+        ]
+      ]
+    },
+    {
+      "from": "recover",
+      "to": "approach",
+      "when": [
+        [
+          "edgeRatio",
+          "<=",
+          "$edgeSafeRatio"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "guard",
+      "when": [
+        [
+          "rivalMove",
+          "==",
+          "dashRevUp"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$guardRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$readChance"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "counterHook",
+      "when": [
+        [
+          "rivalMove",
+          "==",
+          "whirl"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$counterHookRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$readChance"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "interrupt",
+      "when": [
+        [
+          "rivalMove",
+          "==",
+          "hookReach"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$strikeRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$readChance"
+        ],
+        [
+          "edgeRatio",
+          "<",
+          "$dashEdgeRatio"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "punishHop",
+      "when": [
+        [
+          "rivalVulnerable",
+          "==",
+          1
+        ],
+        [
+          "airborne",
+          "==",
+          0
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$punishRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$punishChance"
+        ],
+        [
+          "edgeRatio",
+          "<",
+          "$hopSafeRatio"
+        ]
+      ]
+    },
+    {
+      "from": "punishHop",
+      "to": "punishDive",
+      "when": [
+        [
+          "airborne",
+          "==",
+          1
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$diveRange"
+        ]
+      ]
+    },
+    {
+      "from": "punishHop",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$punishSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "punishDive",
+      "to": "approach",
+      "when": [
+        [
+          "airborne",
+          "==",
+          0
+        ]
+      ]
+    },
+    {
+      "from": "punishDive",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$punishSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "hookIn",
+      "when": [
+        [
+          "rivalRank",
+          ">=",
+          "$pressureRank"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$hookRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$pressureChance"
+        ]
+      ]
+    },
+    {
+      "from": "*",
+      "to": "strike",
+      "when": [
+        [
+          "rivalRank",
+          ">=",
+          "$pressureRank"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$pressureRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$pressureChance"
+        ],
+        [
+          "edgeRatio",
+          "<",
+          "$dashEdgeRatio"
+        ]
+      ]
+    },
+    {
+      "from": "approach",
+      "to": "juggle",
+      "when": [
+        [
+          "rivalMove",
+          "==",
+          "launched"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$punishRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$readChance"
+        ],
+        [
+          "edgeRatio",
+          "<",
+          "$airEdgeRatio"
+        ]
+      ]
+    },
+    {
+      "from": "approach",
+      "to": "buildGear",
+      "when": [
+        [
+          "gear",
+          "<",
+          "$cashInGear"
+        ],
+        [
+          "distanceToRival",
+          ">",
+          "$buildMinDistance"
+        ],
+        [
+          "roll",
+          "<",
+          "$buildChance"
+        ]
+      ]
+    },
+    {
+      "from": "buildGear",
+      "to": "approach",
+      "when": [
+        [
+          "gear",
+          ">=",
+          "$cashInGear"
+        ]
+      ]
+    },
+    {
+      "from": "buildGear",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$buildSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "approach",
+      "to": "guard",
+      "when": [
+        [
+          "distanceToRival",
+          "<",
+          "$baitRange"
+        ],
+        [
+          "roll",
+          "<",
+          "$baitChance"
+        ]
+      ]
+    },
+    {
+      "from": "approach",
+      "to": "hookIn",
+      "when": [
+        [
+          "distanceToRival",
+          "<",
+          "$hookRange"
+        ],
+        [
+          "timeSinceStrike",
+          ">=",
+          "$strikeCooldown"
+        ],
+        [
+          "roll",
+          "<",
+          "$hookChance"
+        ]
+      ]
+    },
+    {
+      "from": "approach",
+      "to": "strike",
+      "when": [
+        [
+          "gear",
+          ">=",
+          "$strikeMinGear"
+        ],
+        [
+          "distanceToRival",
+          "<",
+          "$strikeRange"
+        ],
+        [
+          "timeSinceStrike",
+          ">=",
+          "$strikeCooldown"
+        ],
+        [
+          "roll",
+          "<",
+          "$strikeChance"
+        ],
+        [
+          "edgeRatio",
+          "<",
+          "$dashEdgeRatio"
+        ]
+      ]
+    },
+    {
+      "from": "approach",
+      "to": "circle",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$approachSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "circle",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$circleSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "strike",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$tacticSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "hookIn",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$tacticSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "guard",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$tacticSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "counterHook",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$tacticSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "interrupt",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$tacticSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "breakOut",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$tacticSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "juggle",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$comboSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "shatter",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$comboSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "revEscape",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$tacticSeconds"
+        ]
+      ]
+    },
+    {
+      "from": "dodgeShatter",
+      "to": "approach",
+      "when": [
+        [
+          "timeInState",
+          ">=",
+          "$comboSeconds"
+        ]
+      ]
+    }
+  ]
+}

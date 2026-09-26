@@ -1,0 +1,57 @@
+{
+  "selected": "street",
+  "dishes": [
+    {
+      "id": "street",
+      "name": "STREET DISH",
+      "radius": 300,
+      "bowlAccel": 240,
+      "rimHeight": 110,
+      "wallRestitution": 0.88,
+      "spillExitRatio": 1.0,
+      "lipGaps": [
+        {
+          "angleDegrees": 45,
+          "widthDegrees": 14
+        },
+        {
+          "angleDegrees": 135,
+          "widthDegrees": 14
+        },
+        {
+          "angleDegrees": 225,
+          "widthDegrees": 14
+        },
+        {
+          "angleDegrees": 315,
+          "widthDegrees": 14
+        }
+      ],
+      "look": {
+        "floorCenter": "#2a2447",
+        "floorEdge": "#141126",
+        "floorRings": 14,
+        "gridColor": "#ff4fd8",
+        "gridAlpha": 0.07,
+        "gridRings": 5,
+        "gridSpokes": 12,
+        "rimColor": "#e8e3ff",
+        "rimWidth": 9,
+        "lipColor": "#ffcc00",
+        "lipStripeColor": "#1a1a1a",
+        "lipDepth": 26,
+        "centerMarkColor": "#ff4fd8",
+        "centerMarkAlpha": 0.5,
+        "rimLineColor": "#36d6ff",
+        "rimLineAlpha": 0.12,
+        "rimLineRidingAlpha": 0.35
+      },
+      "rimLine": {
+        "innerRatio": 0.56,
+        "outerRatio": 0.8,
+        "accel": 520,
+        "minSpeed": 200
+      }
+    }
+  ]
+}

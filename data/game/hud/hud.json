@@ -1,0 +1,119 @@
+{
+  "font": {
+    "fontFamily": "'Trebuchet MS', 'Arial Black', system-ui, sans-serif",
+    "fontWeight": "900"
+  },
+  "panel": {
+    "maxWidth": 250,
+    "margin": 12,
+    "nameSize": 17,
+    "detailSize": 11,
+    "gaugeHeight": 10,
+    "gaugeGap": 5,
+    "cornerRadius": 4,
+    "backColor": "#161229",
+    "backAlpha": 0.85,
+    "textColor": "#eef2ff",
+    "detailColor": "#9aa3c7",
+    "spinColor": "#6fd3ff",
+    "spinLowColor": "#ff9b54",
+    "spinLowRatio": 0.3,
+    "gaugeBackColor": "#08060f",
+    "shatterGateColor": "#ff4fd8",
+    "redlineColor": "#ff3355"
+  },
+  "points": {
+    "pipRadius": 6,
+    "pipGap": 5,
+    "filledColor": "#ffcc00",
+    "emptyColor": "#2c2748"
+  },
+  "banner": {
+    "fontSize": 64,
+    "smallFontSize": 28,
+    "strokeColor": "#08060f",
+    "popSeconds": 0.22,
+    "popScale": 1.9,
+    "yRatio": 0.38,
+    "smallYRatio": 0.6
+  },
+  "menuButton": {
+    "width": 200,
+    "height": 52,
+    "fontSize": 22,
+    "fillColor": "#ff4fd8",
+    "hoverColor": "#ff7ae3",
+    "textColor": "#ffffff",
+    "cornerRadius": 10
+  },
+  "hint": {
+    "fontSize": 13,
+    "color": "#9aa3c7",
+    "bottomMargin": 10
+  },
+  "screenLayout": {
+    "titleSize": 72,
+    "titleYRatio": 0.3,
+    "taglineSize": 18,
+    "taglineYRatio": 0.42,
+    "promptSize": 22,
+    "promptYRatio": 0.62,
+    "controlsSize": 13,
+    "controlsYRatio": 0.72,
+    "startButtonYRatio": 0.55,
+    "titleColor": "#ff4fd8",
+    "taglineColor": "#eef2ff",
+    "promptColor": "#ffcc00",
+    "resultTitleSize": 40,
+    "resultTitleYRatio": 0.3,
+    "resultButtonsYRatio": 0.52,
+    "buttonGap": 14,
+    "backdropColor": "#08060f",
+    "backdropAlpha": 0.72,
+    "promptPulsePerSecond": 3
+  },
+  "rev": {
+    "nameSize": 20,
+    "multiplierSize": 14,
+    "barHeight": 5,
+    "gap": 4,
+    "barBackColor": "#08060f",
+    "rankUpSeconds": 0.9,
+    "pipRadius": 3,
+    "pipGap": 9,
+    "pipEmptyColor": "#2c2748"
+  },
+  "callout": {
+    "fontSize": 15,
+    "riseSpeed": 46,
+    "seconds": 0.8,
+    "strokeColor": "#08060f",
+    "offsetY": 34,
+    "capacity": 10,
+    "gainColor": "#eef2ff",
+    "bigColor": "#ffe14a",
+    "lossColor": "#ff5c7a",
+    "staleColor": "#7d86a8",
+    "bigHits": [
+      "deflect",
+      "interrupt",
+      "sling",
+      "spike",
+      "outOfTheAir",
+      "punish"
+    ],
+    "bigScale": 1.35,
+    "spendColor": "#36d6ff",
+    "redlineColor": "#ff3355",
+    "spendReasons": [
+      "revCancel",
+      "revBreakOut"
+    ]
+  },
+  "shatterPrompt": {
+    "fontSize": 22,
+    "color": "#ff4fd8",
+    "yRatio": 0.8,
+    "pulsePerSecond": 8
+  }
+}

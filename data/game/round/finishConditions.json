@@ -1,0 +1,47 @@
+[
+  {
+    "finish": "shatter",
+    "priority": 0,
+    "points": 3,
+    "when": [
+      [
+        "shattered",
+        "==",
+        1
+      ]
+    ],
+    "banner": "SHATTERED!",
+    "bannerColor": "#ff4fd8",
+    "rigEffect": "shatter"
+  },
+  {
+    "finish": "spill",
+    "priority": 1,
+    "points": 2,
+    "when": [
+      [
+        "spilled",
+        "==",
+        1
+      ]
+    ],
+    "banner": "SPILL!",
+    "bannerColor": "#ffcc00",
+    "rigEffect": "spill"
+  },
+  {
+    "finish": "topple",
+    "priority": 2,
+    "points": 1,
+    "when": [
+      [
+        "spin",
+        "<=",
+        0
+      ]
+    ],
+    "banner": "TOPPLE",
+    "bannerColor": "#9aa3c7",
+    "rigEffect": "topple"
+  }
+]

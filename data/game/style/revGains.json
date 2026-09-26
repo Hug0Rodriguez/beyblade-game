@@ -1,0 +1,38 @@
+{
+  "hits": {
+    "strike": 40,
+    "slam": 50,
+    "airStrike": 90,
+    "outOfTheAir": 150,
+    "deflect": 160,
+    "interrupt": 150,
+    "sling": 140,
+    "spike": 150,
+    "wallSplat": 80,
+    "punish": 180,
+    "shatter": 0
+  },
+  "afterRimBonus": 70,
+  "airtimePerSecond": 30,
+  "surplusPerSecond": 20,
+  "surplusSpeedRatio": 1.25,
+  "labels": {
+    "strike": "STRIKE",
+    "slam": "SLAM",
+    "airStrike": "SKY STRIKE",
+    "outOfTheAir": "OUT OF THE AIR!",
+    "deflect": "COUNTER!",
+    "interrupt": "INTERRUPT!",
+    "sling": "SLING!",
+    "spike": "SPIKE!",
+    "wallSplat": "WALL SPLAT",
+    "punish": "PUNISH!",
+    "afterRim": "PINBALL!",
+    "hitTaken": "−REV",
+    "countered": "COUNTERED",
+    "stale": "STALE",
+    "revCancel": "REV CANCEL",
+    "revBreakOut": "REV BREAK",
+    "redline": "REDLINE"
+  }
+}

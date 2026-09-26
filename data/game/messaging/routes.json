@@ -1,0 +1,235 @@
+{
+  "//": "message type → ordered handler ids. Key order = delivery order within a drain pass; handler order = call order.",
+  "KeyChanged": [
+    "spinner.onKeyChanged"
+  ],
+  "JoystickMoved": [
+    "spinner.onJoystickMoved"
+  ],
+  "TouchButtonChanged": [
+    "spinner.onTouchButtonChanged"
+  ],
+  "PointerKindDetected": [
+    "spinner.view.onPointerKind",
+    "screens.title.onPointerKind",
+    "screens.brawl.onPointerKind",
+    "style.view.onPointerKind"
+  ],
+  "//input": "Device input is delivered before StepTicked so a step always sees this frame's input.",
+  "StepTicked": [
+    "flow.tick",
+    "spinner.readHumanCommands",
+    "spinner.decideCpuCommands",
+    "moves.tickMoves",
+    "dish.computeForces",
+    "rig.tickSpin",
+    "style.tickRev",
+    "brawl.integrateMotion",
+    "round.tick"
+  ],
+  "TimeScaleRequested": [
+    "engine.time.onTimeScaleRequested"
+  ],
+  "GameBooted": [
+    "spinner.onGameBooted",
+    "flow.gameFlow"
+  ],
+  "StateEntered": [
+    "engine.screens.onStateEntered",
+    "spinner.onFlowState",
+    "spinner.observeMoves",
+    "dish.onFlowState",
+    "rig.onFlowState",
+    "moves.onFlowState",
+    "brawl.onStateEntered",
+    "style.onFlowState",
+    "round.onFlowState",
+    "match.onRoundSettled",
+    "rig.view.onMoveState",
+    "brawl.view.onFlowState",
+    "screens.brawl.onFlowState",
+    "spinner.view.onMoveState"
+  ],
+  "StateExited": [],
+  "SpinnerAssigned": [
+    "rig.onSpinnerAssigned",
+    "match.onSpinnerAssigned",
+    "rig.view.hudOnSpinnerAssigned",
+    "match.view.onSpinnerAssigned",
+    "style.view.onSpinnerAssigned",
+    "spinner.view.onSpinnerAssigned"
+  ],
+  "RigReady": [
+    "dish.onRigReady",
+    "moves.onRigReady",
+    "brawl.onRigReady",
+    "style.onRigReady",
+    "round.onRigReady",
+    "rig.view.onRigReady",
+    "rig.view.hudOnRigReady",
+    "brawl.view.onRigReady"
+  ],
+  "StartRequested": [
+    "match.onStartRequested"
+  ],
+  "RematchRequested": [
+    "match.onRematchRequested"
+  ],
+  "TitleRequested": [
+    "flow.gameFlow"
+  ],
+  "MatchStarted": [
+    "round.onMatchStarted",
+    "flow.gameFlow"
+  ],
+  "RoundStarted": [
+    "rig.onRoundStarted",
+    "brawl.onRoundStarted",
+    "dish.onRoundStarted",
+    "moves.onRoundStarted",
+    "spinner.onRoundStarted",
+    "style.onRoundStarted",
+    "round.onRoundStarted",
+    "rig.view.onRoundStarted",
+    "brawl.view.onRoundStarted",
+    "round.view.onRoundStarted",
+    "style.view.onRoundStarted"
+  ],
+  "CountdownBeat": [
+    "round.view.onCountdownBeat"
+  ],
+  "CountdownFinished": [
+    "flow.gameFlow"
+  ],
+  "SpinnerCommandIssued": [
+    "moves.applyCommand",
+    "brawl.applySteer"
+  ],
+  "MoveStarted": [
+    "rig.onMoveStarted",
+    "brawl.onMoveStarted",
+    "brawl.view.onMoveStarted",
+    "rig.view.onMoveStarted",
+    "style.onMoveStarted"
+  ],
+  "MoveRefused": [
+    "rig.view.onMoveRefused"
+  ],
+  "RevCancelled": [
+    "style.onRevCancelled"
+  ],
+  "DishForcesComputed": [
+    "brawl.applyForces"
+  ],
+  "RigBodiesMoved": [
+    "dish.trackBodies",
+    "brawl.detectContacts",
+    "moves.observeBodies",
+    "spinner.observeBodies",
+    "style.observeBodies",
+    "rig.view.trackBodies",
+    "brawl.view.trackBodies",
+    "style.view.trackBodies",
+    "dish.view.onBodiesMoved"
+  ],
+  "RimHit": [
+    "brawl.resolveRimHit",
+    "brawl.view.onRimHit"
+  ],
+  "RigSpilled": [
+    "round.trackSpill"
+  ],
+  "ContactDetected": [
+    "brawl.view.onContact"
+  ],
+  "HitLanded": [
+    "rig.onHitLanded",
+    "style.onHitLanded",
+    "moves.onHitLanded",
+    "round.trackShatter",
+    "rig.view.onHitLanded",
+    "brawl.view.onHitLanded"
+  ],
+  "GearChanged": [
+    "spinner.observeGear",
+    "rig.view.onGearChanged",
+    "brawl.view.onGearChanged",
+    "style.view.onGearChanged"
+  ],
+  "Landed": [
+    "moves.onLanded",
+    "rig.view.onLanded",
+    "brawl.view.onLanded"
+  ],
+  "RigSpinChanged": [
+    "round.trackSpin",
+    "moves.observeSpin",
+    "spinner.observeSpin",
+    "style.observeSpin",
+    "rig.view.onSpinChanged",
+    "rig.view.hudOnSpinChanged"
+  ],
+  "AttackWhiffed": [
+    "style.onAttackWhiffed"
+  ],
+  "RevChanged": [
+    "brawl.onRevChanged",
+    "rig.onRevChanged",
+    "style.view.onRevChanged",
+    "moves.observeRev",
+    "rig.view.onRevChanged",
+    "spinner.observeRev",
+    "spinner.view.onRevChanged"
+  ],
+  "RevGained": [
+    "style.view.onRevGained"
+  ],
+  "RedlineChanged": [
+    "style.view.onRedlineChanged",
+    "rig.view.hudOnRedline"
+  ],
+  "ShatterReady": [
+    "moves.observeShatterReady",
+    "spinner.observeShatterReady",
+    "style.view.onShatterReady",
+    "spinner.view.onShatterReady"
+  ],
+  "ShatterCharging": [
+    "rig.view.onShatterCharging"
+  ],
+  "RoundFinished": [
+    "match.awardPoints",
+    "style.onRoundFinished",
+    "rig.view.onRoundFinished",
+    "brawl.view.onRoundFinished",
+    "round.view.onRoundFinished"
+  ],
+  "PointsAwarded": [
+    "match.view.onPointsAwarded"
+  ],
+  "RoundScored": [
+    "flow.gameFlow"
+  ],
+  "MatchWon": [
+    "flow.gameFlow",
+    "screens.matchResult.onMatchWon"
+  ],
+  "ViewportResized": [
+    "engine.screens.onViewportResized",
+    "spinner.view.layout",
+    "rig.view.layoutHud",
+    "style.view.layout",
+    "match.view.layout",
+    "round.view.layout",
+    "screens.title.layout",
+    "screens.brawl.layout",
+    "screens.matchResult.layout"
+  ],
+  "FrameRendered": [
+    "rig.view.render",
+    "brawl.view.render",
+    "style.view.animate",
+    "round.view.animate",
+    "screens.title.animate"
+  ]
+}

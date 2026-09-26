@@ -1,0 +1,4 @@
+[
+  { "id": 0, "name": "YOU", "controller": "human", "rigId": "volt", "profileId": "" },
+  { "id": 1, "name": "RIVAL", "controller": "cpu", "rigId": "raze", "profileId": "brawler" }
+]

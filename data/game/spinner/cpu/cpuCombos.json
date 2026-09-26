@@ -1,0 +1,19 @@
+[
+  {
+    "id": "juggleRally",
+    "steps": [
+      {
+        "at": 0,
+        "press": "pop"
+      },
+      {
+        "at": 0.18,
+        "press": "dash"
+      },
+      {
+        "at": 0.5,
+        "press": "pop"
+      }
+    ]
+  }
+]

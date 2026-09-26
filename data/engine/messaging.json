@@ -1,0 +1,4 @@
+{
+  "maxDrainPasses": 24,
+  "defaultQueueCapacity": 32
+}

@@ -1,0 +1,40 @@
+{
+  "baseAccel": 3600,
+  "baseDecel": 3000,
+  "surplusTurnRate": 7,
+  "surplusTurnPenaltyPerSpeed": 0.004,
+  "surplusFadePerSecond": 1.3,
+  "surplusIdleFadePerSecond": 3.2,
+  "maxSpeed": 1100,
+  "gravity": 1500,
+  "airAccel": 900,
+  "airMaxSpeed": 340,
+  "contactHeight": 34,
+  "noControlStates": [
+    "stunned",
+    "launched"
+  ],
+  "spinDirection": 1,
+  "rimChainSeconds": 0.7,
+  "aboveThreshold": 8,
+  "juggleLaunchDecay": 0.72,
+  "brakeStates": [
+    "whirl"
+  ],
+  "brakePerSecond": 14,
+  "slingRimSeconds": 0.6,
+  "homingStates": [
+    "shatter"
+  ],
+  "homingTurnRate": 22,
+  "heightlessAttackKinds": [
+    "shatter"
+  ],
+  "heightlessTargetStates": [
+    "launched",
+    "stunned",
+    "breakOut",
+    "revBreakOut"
+  ],
+  "launchApexCap": 100
+}

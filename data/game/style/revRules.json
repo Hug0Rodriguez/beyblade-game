@@ -1,0 +1,35 @@
+{
+  "varietyWindow": 4,
+  "varietyFactors": [
+    1,
+    0.7,
+    0.45,
+    0.3,
+    0.2
+  ],
+  "idleGraceSeconds": 2.5,
+  "idleDecayPerSecond": 50,
+  "shatterRivalSpinRatio": 0.65,
+  "whiffPenaltyRanks": {
+    "shatter": 2
+  },
+  "hitPenaltyRatio": 0.15,
+  "lossPenaltyRatios": {
+    "deflect": 0.3,
+    "interrupt": 0.3,
+    "sling": 0.3,
+    "spike": 0.3,
+    "punish": 0.3,
+    "outOfTheAir": 0.3
+  },
+  "spendOnHit": {
+    "shatter": 1.0
+  },
+  "redline": {
+    "spinRatio": 0.35,
+    "gainMultiplier": 1.4,
+    "floorRank": 1
+  },
+  "shatterChargeSeconds": 1.4,
+  "topRankHitDrop": 1
+}
